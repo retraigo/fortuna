@@ -1,2 +1,2 @@
 # fortuna
-Weighted gacha system
+Weighted gacha system. Lazy to write docs.
