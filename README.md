@@ -1,0 +1,2 @@
+# fortuna
+Weighted gacha system
