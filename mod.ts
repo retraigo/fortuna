@@ -1,22 +1,22 @@
-interface RawGachaData {
+export interface RawGachaData {
   tier: number;
   featured?: boolean;
   result: any;
   chance: number;
 }
 
-interface GachaData {
+export interface GachaData {
   tier: number;
   result: any;
   chance: number;
 }
 
-interface GachaChoice {
+export interface GachaChoice {
   result: any;
   chance: number;
 }
 
-interface GachaTier {
+export interface GachaTier {
   items: number;
   chance: number;
   tier: number;
@@ -70,22 +70,21 @@ export class GachaMachine {
     this.tiers = tierList;
     return tierList;
   }
-  get(num = 1) {
+  get(num = 1, detailed = false) {
     let result = [];
     for (let i = num; i > 0; --i) {
-      result.push(this._get());
+      result.push(this._get(detailed));
     }
     return result;
   }
-  _get() {
+  _get(detailed = false) {
     let tier = this._roll(
       this.tiers.map((x) => ({ chance: x.chance, result: x.tier })),
     );
-    let itemTier = this.items.filter((x) => x.tier == tier);
-    let result = this._roll(itemTier);
-    return result;
+    const result = this._roll(this.items.filter((x) => x.tier == tier.result));
+    return detailed ? result : result.result;
   }
-  _roll(choices: Array<GachaChoice>) {
+  _roll(choices: Array<GachaChoice>): GachaChoice {
     let filteredChoices = [];
     let total = 0.0;
     for (let i = 0; i < choices.length; ++i) {
@@ -99,8 +98,20 @@ export class GachaMachine {
     for (let i = 0; i < filteredChoices.length; ++i) {
       going += filteredChoices[i].chance;
       if (result < going) {
-        return filteredChoices[i].result;
+        return filteredChoices[i];
       }
     }
+    return filteredChoices[Math.floor(Math.random() * filteredChoices.length)];
+  }
+  static createItem(
+    result: any,
+    chance = 1,
+    tier = 1,
+    featured = false,
+  ): RawGachaData {
+    return { result, chance, tier, featured };
   }
 }
+
+export {GachaMachine as Fortuna}
+export {GachaMachine as default}
