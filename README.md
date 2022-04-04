@@ -1,2 +1,38 @@
 # fortuna
-Weighted gacha system. Lazy to write docs.
+Weighted gacha system.
+
+### Usage
+
+Create an item using `GachaMachine.createItem`
+
+More weight = more common
+```js
+const items = [
+    GachaMachine.createItem("SSR cool character", 1),
+    GachaMachine.createItem("Kinda rare character", 3),
+    GachaMachine.createItem("Mob character", 5),
+    GachaMachine.createItem("Mob character", 5),
+    GachaMachine.createItem("Mob character", 5),
+  }
+]
+
+const machine = new GachaMachine(items)
+
+machine.get(10) // Rolls 10x 
+
+/*
+    My result:
+    [
+      "Kinda rare character",
+      "Mob character",
+      "Mob character",
+      "Mob character",
+      "Mob character",
+      "Kinda rare character",
+      "Mob character",
+      "Mob character",
+      "Mob character",
+      "Mob character"
+    ]
+*/
+```
