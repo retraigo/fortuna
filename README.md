@@ -74,3 +74,5 @@ GachaMachine._roll(items) // Rolls one item from the list of items
 
 ## Documentation
 Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
+
+A guide for usage can be found in [fortuna.nekooftheabyss.xyz](https://fortuna.nekooftheabyss.xyz)
