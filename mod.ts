@@ -50,7 +50,7 @@ export class GachaMachine {
    * @param {RawGachaData[]} items - Array of gacha items
    * @returns {GachaData[]} newItems
    */
-  configItems(items: RawGachaData[]) : GachaData[] {
+  configItems(items: RawGachaData[]): GachaData[] {
     let newItems: GachaData[] = items = items.sort((a, b) => a.tier - b.tier)
       .map((x) => ({
         chance: x.featured ? (x.chance + 1) : x.chance,
@@ -60,12 +60,12 @@ export class GachaMachine {
     this.items = newItems;
     return newItems;
   }
-    /**
+  /**
    * Configure gacha tiers (meant for internal use).
    * @param {RawGachaData[]} items - Array of gacha items.
    * @returns {GachaTier[]} tierList - Array of gacha tiers.
    */
-  configTiers(items: Array<RawGachaData>) : GachaTier[] {
+  configTiers(items: Array<RawGachaData>): GachaTier[] {
     let tiers: GachaTier[] = [];
     for (let i = 0; i < this.pool.length; ++i) {
       tiers[this.pool[i]] = { items: 0, chance: 0, tier: this.pool[i] };
@@ -83,12 +83,11 @@ export class GachaMachine {
     return tierList;
   }
   /**
-   * 
    * @param {number} num - Number of items to roll.
    * @param {boolean} detailed - Whether to return the entire roll object instead of just the result.
    * @returns {any[]} array of results.
    */
-  get(num = 1, detailed = false) : GachaChoice[] | any[] {
+  get(num = 1, detailed = false): GachaChoice[] | any[] {
     let result = [];
     for (let i = num; i > 0; --i) {
       result.push(this._get(detailed));
@@ -99,7 +98,9 @@ export class GachaMachine {
     let tier = GachaMachine._roll(
       this.tiers.map((x) => ({ chance: x.chance, result: x.tier })),
     );
-    const result = GachaMachine._roll(this.items.filter((x) => x.tier == tier.result));
+    const result = GachaMachine._roll(
+      this.items.filter((x) => x.tier == tier.result),
+    );
     return detailed ? result : result.result;
   }
   /**
@@ -127,7 +128,7 @@ export class GachaMachine {
     return filteredChoices[Math.floor(Math.random() * filteredChoices.length)];
   }
   /**
-   * 
+   * Create a gacha item
    * @param {any} result - Data of the item.
    * @param {number} chance - Weight of the item. More weight = more common.
    * @param {number} tier - Tier of the item (optional and defaults to 1).
@@ -141,6 +142,15 @@ export class GachaMachine {
     featured = false,
   ): RawGachaData {
     return { result, chance, tier, featured };
+  }
+  /**
+   * Create a gacha choice
+   * @param {any} result - Any item to be rolled
+   * @param {number} chance - Weight of the item
+   * @returns {GachaChoice}
+   */
+  static createRollChoice(result: any, chance = 1): GachaChoice {
+    return { result, chance };
   }
 }
 
