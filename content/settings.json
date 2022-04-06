@@ -1,0 +1,11 @@
+{
+  "title": "Fortuna",
+  "url": "localhost:3000/",
+  "logo": {
+    "light": "/icon.png",
+    "dark": "/icon.png"
+  },
+  "github": "queenochaos/fortuna",
+  "twitter": "@retraigo",
+  "defaultBranch": "site"
+}
