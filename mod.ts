@@ -85,9 +85,14 @@ export class GachaMachine {
   /**
    * @param {number} num - Number of items to roll.
    * @param {boolean} detailed - Whether to return the entire roll object instead of just the result.
+   * @param {number[]} pool - Custom pool to use for this roll.
    * @returns {any[]} array of results.
    */
-  get(num = 1, detailed = false): GachaChoice[] | any[] {
+  get(num = 1, detailed = false, pool: number[] = []): GachaChoice[] | any[] {
+    if(pool.length > 0) {
+      const newMachine = new GachaMachine(this.rawItems, pool)
+      return newMachine.get(num, detailed)
+    }
     let result = [];
     for (let i = num; i > 0; --i) {
       result.push(this._get(detailed));
