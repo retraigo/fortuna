@@ -37,10 +37,17 @@ export class GachaMachine {
    * @param {GachaData[]} items - Array of items featured in the gacha
    * @param {number[]} pool - Array of tiers featured in the gacha
    */
-  constructor(items: Array<RawGachaData>, pool: Array<number> = [1]) {
+  constructor(items: Array<RawGachaData>, pool: Array<number> = []) {
     this.items = [];
     this.tiers = [];
     this.pool = pool;
+    if(!this.pool || this.pool.length === 0) {
+      this.pool = items.filter((x, i) => items.indexOf(items.find(y => y.tier === x.tier) || x) !== i).map(x => x.tier) || [1]
+    }
+    this.pool.forEach(x => {
+      if(!items.map(y => y.tier).includes(x)) throw new Error(`None of the items in the machine match one or more tiers from the provided pool (${x}).`)
+    })
+    console.log(this.pool)
     this.rawItems = items;
     this.configItems(items);
     this.configTiers(items);

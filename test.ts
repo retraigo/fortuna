@@ -17,13 +17,14 @@ console.log(machine)
 console.log(machine.get(5, true));
 */
 const items = [
-  GachaMachine.createItem("SSR cool character", 1),
-  GachaMachine.createItem("Kinda rare character", 3),
-  GachaMachine.createItem("Mob character", 5),
-  GachaMachine.createItem("Mob character", 5),
-  GachaMachine.createItem("Mob character", 5),
+  GachaMachine.createItem("SSR cool character", 1, 2),
+  GachaMachine.createItem("Rare cool character", 5, 2),
+  GachaMachine.createItem("Kinda rare character", 8, 1),
+  GachaMachine.createItem("Mob character 1", 10, 1),
+  GachaMachine.createItem("Mob character 2", 10, 1),
+  GachaMachine.createItem("Mob character 3", 10, 1),
 ]
 
 const machine = new GachaMachine(items)
 
-console.log(machine.get(10)) // Rolls 10x 
+console.log(machine.get(10, false, [5])) // Rolls 10x 
