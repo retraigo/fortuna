@@ -58,7 +58,7 @@ GachaMachine._roll(items) // Rolls one item from the list of items
 ### Alternatively...
 `GachaMachine.createRollChoice` just returns an object with `result` and `chance`.
 ```ts
-import fortuna from 'xxx' // wherever you are importing from. 
+import { GachaMachine } from 'xxx' // wherever you are importing from. 
 
 const items = [
     {result: "SSR cool character", chance: 1},

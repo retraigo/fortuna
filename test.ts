@@ -1,5 +1,4 @@
 import { GachaMachine } from "./mod.ts";
-import { default as genString } from "https://deno.land/x/lala@v2.1.2/functions/generator/string/index.js";
 /*
 const items = [];
 for (let i = 0; i < 100; ++i) {
