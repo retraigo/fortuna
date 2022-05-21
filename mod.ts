@@ -47,7 +47,7 @@ export class GachaMachine {
     this.pool.forEach(x => {
       if(!items.map(y => y.tier).includes(x)) throw new Error(`None of the items in the machine match one or more tiers from the provided pool (${x}).`)
     })
-    console.log(this.pool)
+//    console.log(this.pool)
     this.rawItems = items;
     this.configItems(items);
     this.configTiers(items);
