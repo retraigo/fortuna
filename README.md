@@ -1,6 +1,13 @@
 # fortuna
 Weighted gacha system.
 
+## WILL BE REWORKED A LOT BEFORE V2
+I initially made fortuna for a very specific purpose. When I later decided to make it an open-source, general-purpose gacha system, I had to make a lot of changes which ended up making a large part of the code look niche. More like, it is niche. The only thing a person would need from fortuna is the `_roll` method which I have no idea why I prefixed with an underscore.
+
+Especially the `tier` and `pool` system. Have they ever been of use in any place? If any, those features only make the rest of the code worse.
+
+So I'll be redoing a large part of the code, mainly reworking the two features I mentioned. Hence, v2 will be coming soon with breaking changes for world peace.
+
 ## Usage
 
 Create an item using `GachaMachine.createItem`
