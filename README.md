@@ -42,7 +42,7 @@ You probably don't need all complicated stuff. Here's a quick way to just create
 (Only works on v1.1.0 and above)
 
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/' // wherever you are importing from. 
+import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/mod.ts' // wherever you are importing from. 
 
 const items = [
     GachaMachine.createRollChoice("SSR cool character", 1),
@@ -58,7 +58,7 @@ GachaMachine._roll(items) // Rolls one item from the list of items
 ### Alternatively...
 `GachaMachine.createRollChoice` just returns an object with `result` and `chance`. In otherwords, it's useless code. Just supply your own object ez.
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/' // wherever you are importing from. 
+import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/mod.ts' // wherever you are importing from. 
 
 const items = [
     { result: "SSR cool character", chance: 1 },
