@@ -1,21 +1,23 @@
-export interface RawGachaData {
+/**
+ * Gacha items provided to the Gacha Machine.
+ */
+ export interface GachaData<ItemType> {
   tier: number;
-  featured?: boolean;
-  result: any;
+  result: ItemType;
   chance: number;
 }
 
-export interface GachaData {
-  tier: number;
-  result: any;
+/**
+ * Gacha items returned after rolling.
+ */
+export interface GachaChoice<ItemType> {
+  result: ItemType;
   chance: number;
 }
 
-export interface GachaChoice {
-  result: any;
-  chance: number;
-}
-
+/**
+ * Gacha tier with tier number, chance and item count.
+ */
 export interface GachaTier {
   items: number;
   chance: number;
@@ -23,62 +25,52 @@ export interface GachaTier {
 }
 
 /**
- * Gacha system for Deno
- * @class GachaMachine
+ * Gacha machine setup to roll items from.
  */
-
-export class GachaMachine {
-  items: GachaData[];
+export class GachaMachine<ItemType> {
+  items: GachaData<ItemType>[];
   tiers: GachaTier[];
-  pool: number[];
-  rawItems: GachaData[];
-  /**
-   * A gacha system
-   * @param {GachaData[]} items - Array of items featured in the gacha
-   * @param {number[]} pool - Array of tiers featured in the gacha
-   */
-  constructor(items: Array<RawGachaData>, pool: Array<number> = []) {
+  constructor(items: GachaData<ItemType>[]) {
     this.items = [];
     this.tiers = [];
-    this.pool = pool;
-    if(!this.pool || this.pool.length === 0) {
-      this.pool = items.filter((x, i) => items.indexOf(items.find(y => y.tier === x.tier) || x) !== i).map(x => x.tier) || [1]
-    }
-    this.pool.forEach(x => {
-      if(!items.map(y => y.tier).includes(x)) throw new Error(`None of the items in the machine match one or more tiers from the provided pool (${x}).`)
-    })
-//    console.log(this.pool)
-    this.rawItems = items;
     this.configItems(items);
     this.configTiers(items);
   }
+  get pool(): number[] {
+    return Array.from(
+      this.items.reduce(
+        (acc: Set<number>, val: GachaData<ItemType>) => acc.add(val.tier),
+        new Set<number>(),
+      ).entries(),
+    ).map((x) => x[0]);
+  }
   /**
    * Configure gacha items (meant for internal use)
-   * @param {RawGachaData[]} items - Array of gacha items
-   * @returns {GachaData[]} newItems
+   * @param {GachaData[]} items - Array of gacha items
    */
-  configItems(items: RawGachaData[]): GachaData[] {
-    let newItems: GachaData[] = items = items.sort((a, b) => a.tier - b.tier)
+  configItems(items: GachaData<ItemType>[]): void {
+    let newItems: GachaData<ItemType>[] = items = items.sort((a, b) =>
+      a.tier - b.tier
+    )
       .map((x) => ({
-        chance: x.featured ? (x.chance + 1) : x.chance,
+        chance: x.chance,
         result: x.result,
         tier: x.tier,
       }));
     this.items = newItems;
-    return newItems;
   }
   /**
    * Configure gacha tiers (meant for internal use).
-   * @param {RawGachaData[]} items - Array of gacha items.
-   * @returns {GachaTier[]} tierList - Array of gacha tiers.
+   * @param {GachaData[]} items - Array of gacha items.
    */
-  configTiers(items: Array<RawGachaData>): GachaTier[] {
+  configTiers(items: GachaData<ItemType>[]): void {
     let tiers: GachaTier[] = [];
-    for (let i = 0; i < this.pool.length; ++i) {
-      tiers[this.pool[i]] = { items: 0, chance: 0, tier: this.pool[i] };
+    const pool = this.pool;
+    for (let i = 0; i < pool.length; ++i) {
+      tiers[pool[i]] = { items: 0, chance: 0, tier: pool[i] };
     }
     for (let i = items.length; i > 0; --i) {
-      if (!this.pool.includes(items[i - 1].tier)) continue;
+      if (!pool.includes(items[i - 1].tier)) continue;
       tiers[items[i - 1].tier].items += 1;
       tiers[items[i - 1].tier].chance += items[i - 1].chance;
     }
@@ -87,30 +79,52 @@ export class GachaMachine {
       tierList.push(tiers[i]);
     }
     this.tiers = tierList;
-    return tierList;
   }
   /**
+   * Roll a number of items from the machine.
    * @param {number} num - Number of items to roll.
    * @param {boolean} detailed - Whether to return the entire roll object instead of just the result.
-   * @param {number[]} pool - Custom pool to use for this roll.
-   * @returns {any[]} array of results.
+   * @param {number[]} pool - Custom pool of tiers to use for this roll.
+   * @returns {ItemType[]} array of results.
    */
-  get(num = 1, detailed = false, pool: number[] = []): GachaChoice[] | any[] {
-    if(pool.length > 0) {
-      const newMachine = new GachaMachine(this.rawItems, pool)
-      return newMachine.get(num, detailed)
+  get(
+    num = 1,
+    detailed = false,
+    pool: number[] = this.pool,
+  ): GachaChoice<ItemType>[] | ItemType[] {
+    if (detailed) {
+      let result: GachaChoice<ItemType>[] = [];
+      for (let i = num; i > 0; --i) {
+        result.push(this.choose(pool, detailed));
+      }
+      return result;
+    } else {
+      let result: ItemType[] = [];
+
+      for (let i = num; i > 0; --i) {
+        result.push(this.choose(pool));
+      }
+      return result;
     }
-    let result = [];
-    for (let i = num; i > 0; --i) {
-      result.push(this._get(detailed));
-    }
-    return result;
   }
-  _get(detailed = false) {
-    let tier = GachaMachine._roll(
-      this.tiers.map((x) => ({ chance: x.chance, result: x.tier })),
+  /**
+   * Get one item from the machine.
+   * @param {number[]} pool - Pool of tiers to roll from.
+   * @param {boolean} detailed - Whether to provide the "choice" parameter in the result.
+   */
+  choose(pool: number[], detailed: boolean): GachaChoice<ItemType>;
+  choose(pool: number[]): ItemType;
+  choose(
+    pool: number[] = this.pool,
+    detailed?: boolean,
+  ): GachaChoice<ItemType> | ItemType {
+    let tier = GachaMachine.roll<number>(
+      this.tiers.filter((x) => pool.includes(x.tier)).map((x) => ({
+        chance: x.chance,
+        result: x.tier,
+      })),
     );
-    const result = GachaMachine._roll(
+    const result = GachaMachine.roll<ItemType>(
       this.items.filter((x) => x.tier == tier.result),
     );
     return detailed ? result : result.result;
@@ -118,53 +132,54 @@ export class GachaMachine {
   /**
    * Roll one from an array of gacha choices.
    * @param {GachaChoice[]} choices - Choices to roll from.
-   * @returns {GachaChoice} rolled.
+   * @returns {GachaChoice} Items rolled.
    */
-  static _roll(choices: GachaChoice[]): GachaChoice {
-    let filteredChoices = [];
-    let total = 0.0;
-    for (let i = 0; i < choices.length; ++i) {
-      if (choices[i].chance > 0.0) {
-        filteredChoices.push(choices[i]);
-        total += choices[i].chance;
-      }
-    }
+  static roll<ItemType>(
+    choices: GachaChoice<ItemType>[],
+  ): GachaChoice<ItemType> {
+    const total = choices.reduce(
+      (acc: number, val: GachaChoice<ItemType>) => acc + val.chance,
+      0,
+    );
     let result = Math.random() * total;
     let going = 0.0;
-    for (let i = 0; i < filteredChoices.length; ++i) {
-      going += filteredChoices[i].chance;
+    for (let i = 0; i < choices.length; ++i) {
+      going += choices[i].chance;
       if (result < going) {
-        return filteredChoices[i];
+        return choices[i];
       }
     }
-    return filteredChoices[Math.floor(Math.random() * filteredChoices.length)];
+    return choices[Math.floor(Math.random() * choices.length)];
   }
   /**
-   * Create a gacha item
+   * Create a gacha item to add to the machine.
    * @param {any} result - Data of the item.
    * @param {number} chance - Weight of the item. More weight = more common.
    * @param {number} tier - Tier of the item (optional and defaults to 1).
    * @param {boolean} featured - Whether the item should be featured in its pool.
    * @returns {RawGachaData} item - Item to be passed to the constructor
    */
-  static createItem(
-    result: any,
+  static createItem<ItemType>(
+    result: ItemType,
     chance = 1,
     tier = 1,
-    featured = false,
-  ): RawGachaData {
-    return { result, chance, tier, featured };
+  ): GachaData<ItemType> {
+    return { result, chance, tier };
   }
   /**
-   * Create a gacha choice
+   * Create a gacha choice to directly roll using the static roll method.
    * @param {any} result - Any item to be rolled
    * @param {number} chance - Weight of the item
    * @returns {GachaChoice}
    */
-  static createRollChoice(result: any, chance = 1): GachaChoice {
+  static createRollChoice<ItemType>(
+    result: ItemType,
+    chance = 1,
+  ): GachaChoice<ItemType> {
     return { result, chance };
   }
 }
 
+// Remove `Fortuna` export in v2. Or rename `GachaMachine` to `Fortuna`.
 export { GachaMachine as Fortuna };
 export { GachaMachine as default };
