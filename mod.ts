@@ -1,7 +1,7 @@
 /**
  * Gacha items provided to the Gacha Machine.
  */
- export interface GachaData<ItemType> {
+export interface GachaData<ItemType> {
   tier: number;
   result: ItemType;
   chance: number;
@@ -49,7 +49,7 @@ export class GachaMachine<ItemType> {
    * @param {GachaData[]} items - Array of gacha items
    */
   configItems(items: GachaData<ItemType>[]): void {
-    let newItems: GachaData<ItemType>[] = items = items.sort((a, b) =>
+    const newItems: GachaData<ItemType>[] = items = items.sort((a, b) =>
       a.tier - b.tier
     )
       .map((x) => ({
@@ -64,7 +64,7 @@ export class GachaMachine<ItemType> {
    * @param {GachaData[]} items - Array of gacha items.
    */
   configTiers(items: GachaData<ItemType>[]): void {
-    let tiers: GachaTier[] = [];
+    const tiers: GachaTier[] = [];
     const pool = this.pool;
     for (let i = 0; i < pool.length; ++i) {
       tiers[pool[i]] = { items: 0, chance: 0, tier: pool[i] };
@@ -74,11 +74,13 @@ export class GachaMachine<ItemType> {
       tiers[items[i - 1].tier].items += 1;
       tiers[items[i - 1].tier].chance += items[i - 1].chance;
     }
-    let tierList = [];
-    for (let i in tiers) {
-      tierList.push(tiers[i]);
-    }
-    this.tiers = tierList;
+    //    I don't know why I did this...
+    //    const tierList = [];
+    //    for (const i in tiers) {
+    //      tierList.push(tiers[i]);
+    //    }
+    //    this.tiers = tierList;
+    this.tiers = tiers;
   }
   /**
    * Roll a number of items from the machine.
@@ -93,14 +95,13 @@ export class GachaMachine<ItemType> {
     pool: number[] = this.pool,
   ): GachaChoice<ItemType>[] | ItemType[] {
     if (detailed) {
-      let result: GachaChoice<ItemType>[] = [];
+      const result: GachaChoice<ItemType>[] = [];
       for (let i = num; i > 0; --i) {
         result.push(this.choose(pool, detailed));
       }
       return result;
     } else {
-      let result: ItemType[] = [];
-
+      const result: ItemType[] = [];
       for (let i = num; i > 0; --i) {
         result.push(this.choose(pool));
       }
@@ -118,7 +119,7 @@ export class GachaMachine<ItemType> {
     pool: number[] = this.pool,
     detailed?: boolean,
   ): GachaChoice<ItemType> | ItemType {
-    let tier = GachaMachine.roll<number>(
+    const tier = GachaMachine.roll<number>(
       this.tiers.filter((x) => pool.includes(x.tier)).map((x) => ({
         chance: x.chance,
         result: x.tier,
@@ -126,22 +127,25 @@ export class GachaMachine<ItemType> {
     );
     const result = GachaMachine.roll<ItemType>(
       this.items.filter((x) => x.tier == tier.result),
+      //this.items.filter((x) => pool.includes(x.tier)), => Tried this but this slows everything down.
     );
     return detailed ? result : result.result;
   }
   /**
    * Roll one from an array of gacha choices.
    * @param {GachaChoice[]} choices - Choices to roll from.
+   * @param {number} totalChance - Sum of all chance properties.
    * @returns {GachaChoice} Items rolled.
    */
   static roll<ItemType>(
     choices: GachaChoice<ItemType>[],
+    totalChance?: number,
   ): GachaChoice<ItemType> {
-    const total = choices.reduce(
+    const total = totalChance || choices.reduce(
       (acc: number, val: GachaChoice<ItemType>) => acc + val.chance,
       0,
     );
-    let result = Math.random() * total;
+    const result = Math.random() * total;
     let going = 0.0;
     for (let i = 0; i < choices.length; ++i) {
       going += choices[i].chance;

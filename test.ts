@@ -1,13 +1,13 @@
 import { GachaMachine } from "./mod.ts";
 import { assertAlmostEquals } from "https://deno.land/std@0.145.0/testing/asserts.ts";
 
-import { Duration } from "https://deno.land/x/durationjs@v3.1.1/mod.ts";
+import { Duration } from "https://deno.land/x/durationjs@v4.0.0/mod.ts";
 
 import pokemon from "./testdata/pokemon.json" assert { type: "json" };
 
 function countDupes(arr: string[]): Record<string, number> {
-  let items: Record<string, number> = {};
-  arr.forEach((v, i) => {
+  const items: Record<string, number> = {};
+  arr.forEach((v) => {
     if (items[v]) items[v]++;
     else items[v] = 1;
   });
@@ -54,7 +54,7 @@ Deno.test("Range Check", () => {
     const pk = pokemon.find((y) => y.id === Number(x[0]));
     return { name: pk?.name, count: x[1], tier: pk?.tier };
   }).sort((a, b) => a.count - b.count).reverse().forEach((x) => {
-    if (x.tier === "normal") assertAlmostEquals(x.count / 10000, 0.67, 4e-2);
+    if (x.tier === "normal") assertAlmostEquals(x.count / 10000, 0.67, 1e-1);
     else if (x.tier === "legendary") {
       assertAlmostEquals(x.count / 10000, 0.26, 4e-2);
     } else if (x.tier === "mythic") {
@@ -62,31 +62,32 @@ Deno.test("Range Check", () => {
     }
   });
 });
+
+Deno.test("Time Check", () => {
+  assertAlmostEquals((timeRoll - timeInit) / 1000, 1.56, 1e-1) 
+})
 // TESTS END
 
 console.log("-----REPORT-----");
 console.log(
   "Time taken to configure:",
-  Duration.between(timeConfig, timeStart).stringify(
+  Duration.between(timeConfig, timeStart).toShortString(
     ["s", "ms", "us", "ns"],
-    true,
   ),
 );
 console.log(
   "Time taken to setup machine:",
-  Duration.between(timeConfig, timeInit).stringify(
+  Duration.between(timeConfig, timeInit).toShortString(
     ["s", "ms", "us", "ns"],
-    true,
   ),
 );
 console.log(
   "Time taken to roll 1000000 items:",
-  Duration.between(timeInit, timeRoll).stringify(["s", "ms", "us", "ns"], true),
+  Duration.between(timeInit, timeRoll).toShortString(["s", "ms", "us", "ns"]),
 );
 console.log(
   "Time taken to reduce data into result:",
-  Duration.between(timeReduce, timeRoll).stringify(
+  Duration.between(timeReduce, timeRoll).toShortString(
     ["s", "ms", "us", "ns"],
-    true,
   ),
 );
