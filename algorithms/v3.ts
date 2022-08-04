@@ -8,13 +8,17 @@ import type { GachaChoice } from "../mod.ts";
 export function roll<ItemType>(
   choices: GachaChoice<ItemType>[],
 ): GachaChoice<ItemType> {
-  let filteredChoices = [];
+  const total = choices.reduce(
+    (acc: number, val: GachaChoice<ItemType>) => acc + val.chance,
+    0,
+  );
+  const result = Math.random() * total;
+  let going = 0.0;
   for (let i = 0; i < choices.length; ++i) {
-    for (let chance = choices[i].chance; chance > 0.0; --chance) {
-      filteredChoices.push(i);
+    going += choices[i].chance;
+    if (result < going) {
+      return choices[i];
     }
   }
-  return choices[
-    filteredChoices[Math.floor(Math.random() * filteredChoices.length)]
-  ];
+  return choices[Math.floor(Math.random() * choices.length)];
 }

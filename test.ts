@@ -24,6 +24,7 @@ const items = pokemon.slice(0, 151).map((x) => ({
   weight: x.tier === "legendary" ? 10 : x.tier === "mythic" ? 1 : 25,
 }));
 
+
 const timeConfig = performance.now();
 
 const machine = new GachaMachine(items);
@@ -91,3 +92,4 @@ console.log(
     ["s", "ms", "us", "ns"],
   ),
 );
+// console.log(items.map(x => `GachaChoice {${JSON.stringify(x)}}`).join(",\n"))
