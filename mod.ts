@@ -141,17 +141,21 @@ export class GachaMachine<ItemType> {
     choices: GachaChoice<ItemType>[],
     totalChance?: number,
   ): GachaChoice<ItemType> {
-    const total = totalChance || choices.reduce(
-      (acc: number, val: GachaChoice<ItemType>) => acc + val.chance,
-      0,
-    );
+    let total = totalChance || 0;
+    let i = 0;
+    while (i < choices.length) {
+      total += choices[i].chance;
+      i += 1;
+    }
     const result = Math.random() * total;
     let going = 0.0;
-    for (let i = 0; i < choices.length; ++i) {
+    i = 0;
+    while (i < choices.length) {
       going += choices[i].chance;
       if (result < going) {
         return choices[i];
       }
+      i += 1;
     }
     return choices[Math.floor(Math.random() * choices.length)];
   }
