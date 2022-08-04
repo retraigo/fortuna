@@ -1,6 +1,6 @@
 {
     "tasks": {
         "bench": "deno bench --unstable benches/100k_rolls.ts",
-        "test": "deno run test.ts"
+        "test": "deno run --allow-hrtime test.ts"
     }
 }
