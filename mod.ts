@@ -143,9 +143,11 @@ export class GachaMachine<ItemType> {
   ): GachaChoice<ItemType> {
     let total = totalChance || 0;
     let i = 0;
-    while (i < choices.length) {
-      total += choices[i].chance;
-      i += 1;
+    if (!total) {
+      while (i < choices.length) {
+        total += choices[i].chance;
+        i += 1;
+      }
     }
     const result = Math.random() * total;
     let going = 0.0;
