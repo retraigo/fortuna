@@ -7,12 +7,15 @@ import type { GachaChoice } from "../../mod.ts";
  */
 export function roll<ItemType>(
   choices: GachaChoice<ItemType>[],
+  totalChance = 0,
 ): GachaChoice<ItemType> {
-  let total = 0;
+  let total = totalChance;
   let i = 0;
-  while (i < choices.length) {
-    total += choices[i].chance;
-    i += 1;
+  if (totalChance === 0) {
+    while (i < choices.length) {
+      total += choices[i].chance;
+      i += 1;
+    }
   }
   const result = Math.random() * total;
   let going = 0.0;
