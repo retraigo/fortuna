@@ -1,4 +1,4 @@
-# fortuna
+# fortuna v2
 Weighted gacha system.
 
 ## Usage
@@ -8,12 +8,11 @@ Create an item using `GachaMachine.createItem`
 More weight = more common
 ```js
 const items = [
-    GachaMachine.createItem("SSR cool character", 1),
-    GachaMachine.createItem("Kinda rare character", 3),
-    GachaMachine.createItem("Mob character", 5),
-    GachaMachine.createItem("Mob character", 5),
-    GachaMachine.createItem("Mob character", 5),
-  }
+    { result: "SSR cool character", chance: 1 },
+    { result: "Kinda rare character", chance: 3 },
+    { result: "Mob character", chance: 5 },
+    { result: "Mob character", chance: 5 },
+    { result: "Mob character", chance: 5 },
 ]
 
 const machine = new GachaMachine(items)
@@ -42,23 +41,7 @@ You probably don't need all complicated stuff. Here's a quick way to just create
 (Only works on v1.1.0 and above)
 
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna@v2.0.0/mod.ts' // wherever you are importing from. 
-
-const items = [
-    GachaMachine.createRollChoice("SSR cool character", 1),
-    GachaMachine.createRollChoice("Kinda rare character", 3),
-    GachaMachine.createRollChoice("Mob character", 5),
-    GachaMachine.createRollChoice("Mob character", 5),
-    GachaMachine.createRollChoice("Mob character", 5),
-]
-
-GachaMachine._roll(items) // Rolls one item from the list of items
-```
-
-### Alternatively...
-`GachaMachine.createRollChoice` just returns an object with `result` and `chance`. In otherwords, it's useless code. Just supply your own object ez.
-```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/mod.ts' // wherever you are importing from. 
+import { GachaMachine } from 'https://deno.land/x/fortuna/mod.ts' // wherever you are importing from. 
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -68,7 +51,23 @@ const items = [
     { result: "Mob character", chance: 5 },
 ]
 
-GachaMachine.roll(items) // Rolls one item from the list of items
+GachaMachine.rollWithLinearSearch(items) // Rolls one item from the list of items using linear search.
+```
+
+`GachaMachine#get()` works using Binary Search by default. Using the Binary Search method explicitly requires a different structure of data for input.
+
+```ts
+import { GachaMachine } from 'https://deno.land/x/fortuna/mod.ts' // wherever you are importing from. 
+
+const items = [
+    { result: "SSR cool character", cumulativeChance: 1 },
+    { result: "Kinda rare character", cumulativeChance: 4 },
+    { result: "Mob character", cumulativeChance: 9 },
+    { result: "Mob character", cumulativeChance: 14 },
+    { result: "Mob character", cumulativeChance: 19 },
+]
+
+GachaMachine.rollWithBinarySearch(items) // Rolls one item from the list of items using linear search.
 ```
 
 
@@ -77,20 +76,3 @@ Documentation for the latest version can be found in [https://doc.deno.land/http
 
 A guide for usage can be found in [docs.nekooftheabyss.moe](https://docs.nekooftheabyss.moe/fortuna) (not updated for v2 yet).
 
-
-## What I don't like about fortuna atm
-I initially made fortuna for a very specific purpose. When I later decided to make it an open-source, general-purpose gacha system, I had to make a lot of changes which ended up making a large part of the code look niche. More like, it is niche. The only thing a person would need from fortuna is the `_roll` method which I have no idea why I prefixed with an underscore.
-
-~~Especially the `tier` and `pool` system. Have they ever been of use in any place? If any, those features only make the rest of the code worse.~~ As of v1.2.0, fortuna's earlier algorithm was replaced with a much simpler one (I realized that I was using a bunch of worthless stuff). Older algorithms can be accessed via the `failures` directory.
-
-### How to test a failure?
-
-```ts
-import { roll } from "https://deno.land/x/fortuna@v1.2.0/failures/roll1.ts"
-```
-
-You can pass an array of items of the form `{ result: ItemType, chance: number}` where `result` is the value and `chance` is the weight of the value. `ItemType` is to be passed as a type parameter to `roll`.
-
-
-~~So I'll be redoing a large part of the code, mainly reworking the two features I mentioned. Hence, v2 will be coming soon with breaking changes for world peace... Hopefully.~~
-v1.2.0 is out with better typings and a better algorithm already. `_roll` is now `roll`.
