@@ -9,7 +9,7 @@ import { GachaMachine as M1 } from "../history/v1.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 
-const items = pokemon.slice(0, 151).map((x) => ({
+const items = pokemon.slice().map((x) => ({
   result: x.id,
   tier: x.tier === "legendary" ? 1 : x.tier === "mythic" ? 2 : 3,
   chance: x.tier === "legendary" ? 11 : x.tier === "mythic" ? 1 : 25,
