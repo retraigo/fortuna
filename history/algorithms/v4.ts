@@ -1,4 +1,4 @@
-import type { GachaChoice } from "../mod.ts";
+import type { GachaChoice } from "../../mod.ts";
 
 /**
  * Roll one from an array of gacha choices.
@@ -8,17 +8,21 @@ import type { GachaChoice } from "../mod.ts";
 export function roll<ItemType>(
   choices: GachaChoice<ItemType>[],
 ): GachaChoice<ItemType> {
-  const total = choices.reduce(
-    (acc: number, val: GachaChoice<ItemType>) => acc + val.chance,
-    0,
-  );
+  let total = 0;
+  let i = 0;
+  while (i < choices.length) {
+    total += choices[i].chance;
+    i += 1;
+  }
   const result = Math.random() * total;
   let going = 0.0;
-  for (let i = 0; i < choices.length; ++i) {
+  i = 0;
+  while (i < choices.length) {
     going += choices[i].chance;
     if (result < going) {
       return choices[i];
     }
+    i += 1;
   }
   return choices[Math.floor(Math.random() * choices.length)];
 }

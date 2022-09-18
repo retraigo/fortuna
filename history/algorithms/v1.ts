@@ -1,4 +1,4 @@
-import type { GachaChoice } from "../mod.ts";
+import type { GachaChoice } from "../../mod.ts";
 
 /**
  * Roll one from an array of gacha choices.
