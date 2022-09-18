@@ -42,7 +42,7 @@ You probably don't need all complicated stuff. Here's a quick way to just create
 (Only works on v1.1.0 and above)
 
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna@v1.2.0/mod.ts' // wherever you are importing from. 
+import { GachaMachine } from 'https://deno.land/x/fortuna@v2.0.0/mod.ts' // wherever you are importing from. 
 
 const items = [
     GachaMachine.createRollChoice("SSR cool character", 1),
@@ -75,7 +75,7 @@ GachaMachine.roll(items) // Rolls one item from the list of items
 ## Documentation
 Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
 
-A guide for usage can be found in [docs.nekooftheabyss.moe](https://docs.nekooftheabyss.moe/fortuna)
+A guide for usage can be found in [docs.nekooftheabyss.moe](https://docs.nekooftheabyss.moe/fortuna) (not updated for v2 yet).
 
 
 ## What I don't like about fortuna atm
