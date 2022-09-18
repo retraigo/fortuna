@@ -24,6 +24,7 @@ const items = pokemon.slice().map((x) => ({
 }));
 
 const itemsForPicker = items.map(x => ({original: x.result, weight: x.chance}))
+const itemsForRWC = items.map(x => ({id: x.result, weight: x.chance}))
 
 console.log(items.reduce((acc, a) => acc + a.chance, 0));
 
@@ -46,7 +47,7 @@ Deno.bench("Rifdhan/weighted-randomly-select", () => {
 
 Deno.bench("parmentf/random-weighted-choice", () => {
   for (let i = 0; i < 1e3; ++i) {
-    wrs.select(items)
+    rwc(items)
   }
 });
 
