@@ -54,11 +54,11 @@ Deno.bench("Algorithm V4", () => {
     roll4(items);
   }
 });
-
+/*
 Deno.bench("Algorithm V4 in Fortuna", () => {
   m1.get(1e6);
 });
-
+*/
 Deno.bench("Algorithm V4 in Fortuna Roll", () => {
   for (let i = 0; i < 1e6; ++i) {
     M1.roll(items, 3695)
