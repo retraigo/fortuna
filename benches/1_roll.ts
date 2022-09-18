@@ -1,9 +1,9 @@
-import { roll as roll1 } from "../algorithms/v1.ts";
-import { roll as roll2 } from "../algorithms/v2.ts";
-import { roll as roll3 } from "../algorithms/v3.ts";
-import { roll as roll4 } from "../algorithms/v4.ts";
-import { roll as roll4_sub } from "../algorithms/v4_sub.ts";
-import { GachaMachine } from "../mod.ts";
+import { roll as roll1 } from "../history/algorithms/v1.ts";
+import { roll as roll2 } from "../history/algorithms/v2.ts";
+import { roll as roll3 } from "../history/algorithms/v3.ts";
+import { roll as roll4 } from "../history/algorithms/v4.ts";
+import { roll as roll4_sub } from "../history/algorithms/v4_sub.ts";
+import { GachaMachine} from "../history/v1.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 

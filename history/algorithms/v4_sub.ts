@@ -1,4 +1,4 @@
-import type { GachaChoice } from "../mod.ts";
+import type { GachaChoice } from "../../mod.ts";
 
 // Dropped before release since it was slightly faster than v4.
 

@@ -31,7 +31,7 @@ const machine = new GachaMachine(items);
 
 const timeInit = performance.now();
 
-const res = machine.get(1000000, false, [1, 2, 3]);
+const res = machine.get(1000000);
 
 const timeRoll = performance.now();
 
