@@ -5,98 +5,86 @@
 class GachaMachine {
     items;
     tiers;
+    maxTier;
+    totalChance;
+    pool;
     constructor(items){
         this.items = [];
         this.tiers = [];
-        this.configItems(items);
-        this.configTiers(items);
+        this.pool = [];
+        this.maxTier = 1;
+        this.totalChance = 0;
+        this.#configTiers(items);
+        this.#configItems(items);
     }
-    get pool() {
-        return Array.from(this.items.reduce((acc, val)=>acc.add(val.tier), new Set()).entries()).map((x)=>x[0]);
-    }
-    configItems(items) {
-        const newItems = items = items.sort((a, b)=>a.tier - b.tier).map((x)=>({
-                chance: x.chance,
-                result: x.result,
-                tier: x.tier
-            }));
-        this.items = newItems;
-    }
-    configTiers(items) {
-        const tiers = [];
-        const pool = this.pool;
-        for(let i = 0; i < pool.length; ++i){
-            tiers[pool[i]] = {
-                items: 0,
-                chance: 0,
-                tier: pool[i]
-            };
-        }
-        for(let i1 = items.length; i1 > 0; --i1){
-            if (!pool.includes(items[i1 - 1].tier)) continue;
-            tiers[items[i1 - 1].tier].items += 1;
-            tiers[items[i1 - 1].tier].chance += items[i1 - 1].chance;
-        }
-        this.tiers = tiers;
-    }
-    get(num = 1, detailed = false, pool = this.pool) {
-        if (detailed) {
-            const result = [];
-            for(let i = num; i > 0; --i){
-                result.push(this.choose(pool, detailed));
-            }
-            return result;
-        } else {
-            const result1 = [];
-            for(let i1 = num; i1 > 0; --i1){
-                result1.push(this.choose(pool));
-            }
-            return result1;
-        }
-    }
-    choose(pool = this.pool, detailed) {
-        const tier = GachaMachine.roll(this.tiers.filter((x)=>pool.includes(x.tier)).map((x)=>({
-                chance: x.chance,
-                result: x.tier
-            })));
-        const result = GachaMachine.roll(this.items.filter((x)=>x.tier == tier.result));
-        return detailed ? result : result.result;
-    }
-    static roll(choices, totalChance) {
-        let total = totalChance || 0;
+    #configTiers(items) {
         let i = 0;
-        if (!total) {
-            while(i < choices.length){
-                total += choices[i].chance;
-                i += 1;
-            }
-        }
-        const result = Math.random() * total;
-        let going = 0.0;
-        i = 0;
-        while(i < choices.length){
-            going += choices[i].chance;
-            if (result < going) {
-                return choices[i];
-            }
+        const tiers = new Set();
+        while(i < items.length){
+            tiers.add(items[i].tier || 1);
             i += 1;
         }
-        return choices[Math.floor(Math.random() * choices.length)];
+        for (const tier of tiers){
+            if (tier > this.maxTier) this.maxTier = tier;
+        }
+        const itemsInTier = new Uint8Array(this.maxTier + 1);
+        const totalChanceInTier = new Uint8Array(this.maxTier + 1);
+        i = 0;
+        while(i < items.length){
+            Atomics.add(itemsInTier, items[i].tier || 1, 1);
+            Atomics.add(totalChanceInTier, items[i].tier || 1, items[i].chance);
+            i += 1;
+        }
+        for (const tier1 of tiers){
+            this.tiers.push({
+                tier: tier1,
+                totalChance: totalChanceInTier[tier1],
+                items: itemsInTier[tier1]
+            });
+        }
+        this.pool = Array.from(tiers);
     }
-    static createItem(result, chance = 1, tier = 1) {
-        return {
-            result,
-            chance,
-            tier
-        };
+    #configItems(items1) {
+        let i1 = 0;
+        let cumulativeChance = 0;
+        const cumulativeChanceInTier = new Uint8Array(this.maxTier + 1);
+        while(i1 < items1.length){
+            this.items.push({
+                result: items1[i1].result,
+                cumulativeChance: cumulativeChance,
+                cumulativeChanceInTier: Atomics.add(cumulativeChanceInTier, items1[i1].tier || 1, items1[i1].chance),
+                tier: items1[i1].tier || 1
+            });
+            cumulativeChance += items1[i1].chance;
+            i1 += 1;
+        }
+        this.totalChance = cumulativeChance;
     }
-    static createRollChoice(result, chance = 1) {
-        return {
-            result,
-            chance
-        };
+    get(count = 1) {
+        const result = [];
+        let i = 0;
+        while(i < count){
+            result.push(this.#roll());
+            i += 1;
+        }
+        return result;
+    }
+    #roll() {
+        if (this.items.length === 1) return this.items[0].result;
+        const rng = Math.random() * this.totalChance;
+        let lower = 0;
+        let max = this.items.length - 1;
+        let mid = Math.floor((max + lower) / 2);
+        while(!(this.items[mid].cumulativeChance > rng && this.items[mid - 1].cumulativeChance < rng) && this.items[mid].cumulativeChance !== rng && mid != 0 && lower <= max){
+            if (this.items[mid].cumulativeChance < rng) {
+                lower = mid + 1;
+                mid = Math.floor((max + lower) / 2);
+            } else {
+                max = mid - 1;
+                mid = Math.floor((max + lower) / 2);
+            }
+        }
+        return this.items[mid].result;
     }
 }
-export { GachaMachine as Fortuna };
-export { GachaMachine as default };
 export { GachaMachine as GachaMachine };
