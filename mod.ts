@@ -123,11 +123,12 @@ export class GachaMachine<ItemType> {
         GachaMachine.rollWithBinarySearch(this.items, this.totalChance),
       ];
     }
-    const result = [];
+    const result = new Array(count);
     let i = 0;
     while (i < count) {
-      result.push(
-        GachaMachine.rollWithBinarySearch(this.items, this.totalChance),
+      result[i] = GachaMachine.rollWithBinarySearch(
+        this.items,
+        this.totalChance,
       );
       i += 1;
     }

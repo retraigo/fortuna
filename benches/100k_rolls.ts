@@ -51,7 +51,7 @@ Deno.bench("Algorithm V4 _ Sub", () => {
 */
 Deno.bench("Algorithm V4", () => {
   for (let i = 0; i < 1e6; ++i) {
-    roll4(items);
+    roll4(items, 3595);
   }
 });
 /*
