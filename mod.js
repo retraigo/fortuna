@@ -73,6 +73,26 @@ class GachaMachine {
         }
         return result;
     }
+    getUnique(count = 1) {
+        if (count > this.items.length) {
+            throw new RangeError(`Cannot pick ${count} unique items from a collection of ${this.items.length} items.`);
+        }
+        if (count === 1) {
+            return [
+                GachaMachine.rollWithBinarySearch(this.items, this.totalChance), 
+            ];
+        }
+        const tempItems = this.items.slice(0);
+        const result = new Array(count);
+        let i = 0;
+        while(i < count){
+            const res = GachaMachine.#rollWithBinarySearchDetailed(tempItems, this.totalChance);
+            result[i] = res.result;
+            tempItems.splice(tempItems.findIndex((x)=>x.cumulativeChance === res.cumulativeChance), 1);
+            i += 1;
+        }
+        return result;
+    }
     getFromTier(tiers, count = 1) {
         const toRoll = [];
         let i = 0;
@@ -97,15 +117,18 @@ class GachaMachine {
         return result;
     }
     static rollWithBinarySearch(items, totalChance) {
-        if (!totalChance) totalChance = items[items.length - 1].cumulativeChance;
-        if (items.length === 1) return items[0].result;
+        return GachaMachine.#rollWithBinarySearchDetailed(items, totalChance).result;
+    }
+    static #rollWithBinarySearchDetailed(items2, totalChance) {
+        if (!totalChance) totalChance = items2[items2.length - 1].cumulativeChance;
+        if (items2.length === 1) return items2[0];
         const rng = Math.random() * totalChance;
         let lower = 0;
-        let max = items.length - 1;
+        let max = items2.length - 1;
         let mid = Math.floor((max + lower) / 2);
         while(mid != 0 && lower <= max){
-            if (items[mid].cumulativeChance > rng && items[mid - 1].cumulativeChance < rng || items[mid].cumulativeChance == rng) return items[mid].result;
-            if (items[mid].cumulativeChance < rng) {
+            if (items2[mid].cumulativeChance > rng && items2[mid - 1].cumulativeChance < rng || items2[mid].cumulativeChance == rng) return items2[mid];
+            if (items2[mid].cumulativeChance < rng) {
                 lower = mid + 1;
                 mid = Math.floor((max + lower) / 2);
             } else {
@@ -113,7 +136,7 @@ class GachaMachine {
                 mid = Math.floor((max + lower) / 2);
             }
         }
-        return items[mid].result;
+        return items2[mid];
     }
     static rollWithLinearSearch(choices, totalChance = 0) {
         let total = totalChance;
