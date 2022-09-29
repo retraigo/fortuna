@@ -135,6 +135,42 @@ export class GachaMachine<ItemType> {
     return result;
   }
   /**
+   * Roll unique items from the gacha machine.
+   * WARNING: This feature is currently unstable.
+   * @param count Number of items to roll.
+   * @returns `count` number of items from the items fed to the constructor.
+   * @example
+   * ```ts
+   * const machine = new GachaMachine(items);
+   * machine.get(11)
+   * ```
+   */
+  getUnique(count = 1): ItemType[] {
+    if (count > this.items.length) {
+      throw new RangeError(
+        `Cannot pick ${count} unique items from a collection of ${this.items.length} items.`,
+      );
+    }
+    if (count === 1) {
+      return [
+        GachaMachine.rollWithBinarySearch(this.items, this.totalChance),
+      ];
+    }
+    const tempItems = this.items.slice(0);
+    const result = new Array(count);
+    let i = 0;
+    while (i < count) {
+      const res = GachaMachine.#rollWithBinarySearchDetailed(
+        tempItems,
+        this.totalChance,
+      );
+      result[i] = res.result;
+      tempItems.splice(tempItems.findIndex(x => x.cumulativeChance === res.cumulativeChance), 1);
+      i += 1;
+    }
+    return result;
+  }
+  /**
    * Roll items from specific tiers.
    * @param tiers List of tiers to roll from.
    * @param count Number of items to roll.
@@ -182,8 +218,14 @@ export class GachaMachine<ItemType> {
     items: ComputedGachaData<ItemType>[],
     totalChance?: number,
   ): ItemType {
+    return GachaMachine.#rollWithBinarySearchDetailed(items, totalChance).result;
+  }
+  static #rollWithBinarySearchDetailed<ItemType>(
+    items: ComputedGachaData<ItemType>[],
+    totalChance?: number,
+  ): ComputedGachaData<ItemType> {
     if (!totalChance) totalChance = items[items.length - 1].cumulativeChance;
-    if (items.length === 1) return items[0].result;
+    if (items.length === 1) return items[0];
     const rng = Math.random() * totalChance;
     let lower = 0;
     let max = items.length - 1;
@@ -195,7 +237,7 @@ export class GachaMachine<ItemType> {
         (items[mid].cumulativeChance > rng &&
           items[mid - 1].cumulativeChance < rng) ||
         items[mid].cumulativeChance == rng
-      ) return items[mid].result;
+      ) return items[mid];
       if (items[mid].cumulativeChance < rng) {
         lower = mid + 1;
         mid = Math.floor((max + lower) / 2);
@@ -204,7 +246,7 @@ export class GachaMachine<ItemType> {
         mid = Math.floor((max + lower) / 2);
       }
     }
-    return items[mid].result;
+    return items[mid];
   }
   /**
    * Roll one item from a pool using linear search. Simple and great for smaller pools.
