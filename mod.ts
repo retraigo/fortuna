@@ -252,6 +252,7 @@ export class GachaMachine<ItemType> {
     }
     return items[mid];
   }
+  // For backwards compat
   static rollWithLinearSearch = roll;
 }
 
