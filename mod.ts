@@ -160,7 +160,6 @@ export class GachaMachine<ItemType> {
   }
   /**
    * Roll unique items from the gacha machine.
-   * WARNING: This feature is currently unstable.
    * @param count Number of items to roll.
    * @returns `count` number of items from the items fed to the constructor.
    * @example
