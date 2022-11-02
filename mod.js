@@ -3,19 +3,43 @@
 // This code was bundled using `deno bundle` and it's not recommended to edit it manually
 
 class GachaMachine {
-    items;
-    tiers;
-    maxTier;
-    totalChance;
-    pool;
+    #items;
+    #tiers;
+    #maxTier;
+    #totalChance;
+    #pool;
     constructor(items){
-        this.items = [];
-        this.tiers = [];
-        this.pool = [];
-        this.maxTier = 1;
-        this.totalChance = 0;
+        this.#items = [];
+        this.#maxTier = 1;
+        this.#pool = [];
+        this.#tiers = [];
+        this.#totalChance = 0;
         this.#configTiers(items);
         this.#configItems(items);
+    }
+    get items() {
+        return this.#items;
+    }
+    set items(data) {
+        this.#items = [];
+        this.#maxTier = 1;
+        this.#pool = [];
+        this.#tiers = [];
+        this.#totalChance = 0;
+        this.#configTiers(data);
+        this.#configItems(data);
+    }
+    get maxTier() {
+        return this.#maxTier;
+    }
+    get pool() {
+        return this.#pool;
+    }
+    get tiers() {
+        return this.#tiers;
+    }
+    get totalChance() {
+        return this.#totalChance;
     }
     #configTiers(items) {
         let i = 0;
@@ -25,7 +49,7 @@ class GachaMachine {
             i += 1;
         }
         for (const tier of tiers){
-            if (tier > this.maxTier) this.maxTier = tier;
+            if (tier > this.maxTier) this.#maxTier = tier;
         }
         const itemsInTier = new Uint8Array(this.maxTier + 1);
         const totalChanceInTier = new Uint8Array(this.maxTier + 1);
@@ -36,20 +60,20 @@ class GachaMachine {
             i += 1;
         }
         for (const tier1 of tiers){
-            this.tiers.push({
+            this.#tiers.push({
                 tier: tier1,
                 totalChance: totalChanceInTier[tier1],
                 items: itemsInTier[tier1]
             });
         }
-        this.pool = Array.from(tiers);
+        this.#pool = Array.from(tiers);
     }
     #configItems(items1) {
         let i1 = 0;
         let cumulativeChance = 0;
         while(i1 < items1.length){
             cumulativeChance += items1[i1].chance;
-            this.items.push({
+            this.#items.push({
                 result: items1[i1].result,
                 chance: items1[i1].chance,
                 cumulativeChance: cumulativeChance,
@@ -57,12 +81,12 @@ class GachaMachine {
             });
             i1 += 1;
         }
-        this.totalChance = cumulativeChance;
+        this.#totalChance = cumulativeChance;
     }
     get(count = 1) {
         if (count === 1) {
             return [
-                GachaMachine.rollWithBinarySearch(this.items, this.totalChance), 
+                GachaMachine.rollWithBinarySearch(this.items, this.totalChance)
             ];
         }
         const result = new Array(count);
@@ -79,7 +103,7 @@ class GachaMachine {
         }
         if (count === 1) {
             return [
-                GachaMachine.rollWithBinarySearch(this.items, this.totalChance), 
+                GachaMachine.rollWithBinarySearch(this.items, this.totalChance)
             ];
         }
         const tempItems = this.items.slice(0);

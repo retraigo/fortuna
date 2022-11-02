@@ -47,23 +47,47 @@ export interface ComputedTierData {
  * A gacha machine for weighted selection.
  */
 export class GachaMachine<ItemType> {
-  items: ComputedGachaData<ItemType>[];
-  tiers: ComputedTierData[];
-  maxTier: number;
-  totalChance: number;
-  pool: number[];
+  #items: ComputedGachaData<ItemType>[];
+  #tiers: ComputedTierData[];
+  #maxTier: number;
+  #totalChance: number;
+  #pool: number[];
   /**
    * Create a new gacha machine for weighted selection.
    * @param items Array of items to roll from.
    */
   constructor(items: GachaData<ItemType>[]) {
-    this.items = [];
-    this.tiers = [];
-    this.pool = [];
-    this.maxTier = 1;
-    this.totalChance = 0;
+    this.#items = [];
+    this.#maxTier = 1;
+    this.#pool = [];
+    this.#tiers = [];
+    this.#totalChance = 0;
     this.#configTiers(items);
     this.#configItems(items);
+  }
+  get items(): ComputedGachaData<ItemType>[] {
+    return this.#items;
+  }
+  set items(data: GachaData<ItemType>[]) {
+    this.#items = [];
+    this.#maxTier = 1;
+    this.#pool = [];
+    this.#tiers = [];
+    this.#totalChance = 0;
+    this.#configTiers(data);
+    this.#configItems(data);
+  }
+  get maxTier() {
+    return this.#maxTier;
+  }
+  get pool() {
+    return this.#pool;
+  }
+  get tiers() {
+    return this.#tiers;
+  }
+  get totalChance() {
+    return this.#totalChance;
   }
   #configTiers(items: GachaData<ItemType>[]) {
     let i = 0;
@@ -73,7 +97,7 @@ export class GachaMachine<ItemType> {
       i += 1;
     }
     for (const tier of tiers) {
-      if (tier > this.maxTier) this.maxTier = tier;
+      if (tier > this.maxTier) this.#maxTier = tier;
     }
     const itemsInTier = new Uint8Array(this.maxTier + 1);
     const totalChanceInTier = new Uint8Array(this.maxTier + 1);
@@ -84,20 +108,20 @@ export class GachaMachine<ItemType> {
       i += 1;
     }
     for (const tier of tiers) {
-      this.tiers.push({
+      this.#tiers.push({
         tier: tier,
         totalChance: totalChanceInTier[tier],
         items: itemsInTier[tier],
       });
     }
-    this.pool = Array.from(tiers);
+    this.#pool = Array.from(tiers);
   }
   #configItems(items: GachaData<ItemType>[]) {
     let i = 0;
     let cumulativeChance = 0;
     while (i < items.length) {
       cumulativeChance += items[i].chance;
-      this.items.push({
+      this.#items.push({
         result: items[i].result,
         chance: items[i].chance,
         cumulativeChance: cumulativeChance,
@@ -105,7 +129,7 @@ export class GachaMachine<ItemType> {
       });
       i += 1;
     }
-    this.totalChance = cumulativeChance;
+    this.#totalChance = cumulativeChance;
   }
   /**
    * Roll items from the gacha machine.

@@ -88,6 +88,23 @@ Deno.test({
   },
 });
 
+Deno.test({
+  name: `Machine can be updated by just setting machine.items after initialization.`,
+  fn() {
+    const machine = new GachaMachine(testData);
+    
+    const machine2 = new GachaMachine(testData.slice(0, 3));
+
+    machine.items = testData.slice(0, 3);
+
+    assertEquals(machine.items, machine2.items, "Items are not equal.");
+    assertEquals(machine.tiers, machine2.tiers, "Tiers are not equal.");
+    assertEquals(machine.totalChance, machine2.totalChance, "totalChance are not equal.");
+    assertEquals(machine.maxTier, machine2.maxTier, "maxTier are not equal.");
+    assertEquals(machine.pool, machine2.pool, "pool are not equal.");
+  },
+});
+
 /*
 Deno.test({
     name: `${sortedTestData[0].chance} in ${testData.reduce((acc, val) => acc + val.chance, 0)} rolls return a ${sortedTestData[0].result}?`,
