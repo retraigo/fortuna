@@ -4,7 +4,8 @@
  * Total number of items in pool: 905
  */
 
-import { GachaMachine } from "../mod.ts";
+import { GachaMachine } from "../history/fortuna_v2.ts";
+import { GachaMachine as GM } from "../mod.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 
@@ -75,7 +76,16 @@ Deno.bench("Balastrong/wrand", { group: "gacha" }, () => {
  * Initializing class is done in the bench too
  * to avoid bias.
  */
-Deno.bench("retraigo/fortuna", { baseline: true, group: "gacha" }, () => {
+Deno.bench("retraigo/fortuna v2", { group: "gacha" }, () => {
   const machine = new GachaMachine(items);
-  machine.get(1e4);
+  machine.get(20);
+});
+
+/**
+ * Initializing class is done in the bench too
+ * to avoid bias.
+ */
+ Deno.bench("retraigo/fortuna v3", { baseline: true, group: "gacha" }, () => {
+  const machine = new GM(items);
+  machine.get(20);
 });

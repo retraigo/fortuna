@@ -5,7 +5,7 @@ import { roll as roll4 } from "../history/algorithms/v4.ts";
 import { roll as roll4_sub } from "../history/algorithms/v4_sub.ts";
 
 import { GachaMachine } from "../mod.ts";
-import { GachaMachine as M1 } from "../history/v1.ts";
+import { GachaMachine as M1 } from "../history/fortuna_v1.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 
