@@ -66,9 +66,12 @@ export class GachaMachine<T> {
     let i = 0;
     if (distinct) {
       const data = this.#items.slice(0);
-      const res = rollWithBinarySearch(data, totalChance);
-      result[i] = data[res].result;
-      data.splice(res, 1);
+      while (i < count) {
+        const res = rollWithBinarySearch(data, totalChance);
+        result[i] = data[res].result;
+        data.splice(res, 1);
+        i += 1;
+      }
     } else {
       const data = this.#items;
       while (i < count) {
