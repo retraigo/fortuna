@@ -70,6 +70,53 @@ const items = [
 GachaMachine.rollWithBinarySearch(items) // Rolls one item from the list of items using linear search.
 ```
 
+## How it works
+
+Fortuna has two algorithms, one being a static method in the `GachaMachine` class and one
+being a standalone function.
+
+### Algorithm 1
+
+Fortuna provides a simple function `roll` that generates a pseudo random number
+and performs linear search on the provided data in order to find the proper item.
+
+```ts
+// JS PSEUDOCODE
+
+// Each choice is an object with 
+//     chance: number
+//     result: T (type parameter)
+// 
+// total chance can be supplied
+// manually or computed from data
+function roll(choices, total) {
+    // runs a loop to compute total
+    if(!total) total = sum_by_chance(data)
+
+    // generate random number for choosing
+    let rng = random_number(0, total)
+
+    // run a loop to find the choice
+    let current = 0.0;
+    for (choice in data) {
+        current = current + choice.chance;
+        if(rng < current) return choice.result;
+    }
+}
+```
+
+Fortuna's default `GachaMachine.get()` uses a more complex, but faster approach.
+
+- When the `GachaMachine` class is instantiated, data is transformed into a form
+  suitable for binary search.
+
+- When `GachaMachine.get()` is run, Fortuna performs binary search on this transformed
+  data.
+
+The `roll` function is more suitable when the weighted data is used only once.
+
+The `get` method is suitable when the weighted data is reused. It comes at extra cost 
+during initialization but compensates for it with better performance when sampling.
 
 ## Documentation
 Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
