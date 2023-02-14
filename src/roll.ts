@@ -17,7 +17,7 @@ export interface GachaChoice<ItemType> {
  * ]
  * roll(items) // Rolls one item from the list of items
  * ```
- * 
+ *
  * ```ts
  * const items = [
  *   { result: "SSR cool character", chance: 1 },
@@ -30,14 +30,34 @@ export interface GachaChoice<ItemType> {
  * ```
  */
 export function roll<ItemType>(
+  choices: ItemType[],
+  chances: number[],
+  totalChance?: number,
+): ItemType;
+export function roll<ItemType>(
   choices: GachaChoice<ItemType>[],
+  totalChance?: number,
+): ItemType;
+export function roll<ItemType>(
+  choices: ItemType[] | GachaChoice<ItemType>[],
+  chanceArrOrTotalChance: number | number[] = 0,
   totalChance = 0,
 ): ItemType {
-  let total = totalChance;
+  let total = Array.isArray(chanceArrOrTotalChance)
+    ? totalChance
+    : chanceArrOrTotalChance || 0;
+  const asArray = Array.isArray(chanceArrOrTotalChance);
+  if (typeof total !== "number") {
+    throw new TypeError(
+      `Invalid type for total chance. Expected 'undefined' or 'number', got '${typeof total}'`,
+    );
+  }
   let i = 0;
   if (totalChance === 0) {
     while (i < choices.length) {
-      total += choices[i].chance;
+      total += asArray
+        ? chanceArrOrTotalChance[i]
+        : (choices[i] as GachaChoice<ItemType>).chance;
       i += 1;
     }
   }
@@ -45,11 +65,19 @@ export function roll<ItemType>(
   let going = 0.0;
   i = 0;
   while (i < choices.length) {
-    going += choices[i].chance;
+    going += asArray
+      ? chanceArrOrTotalChance[i]
+      : (choices[i] as GachaChoice<ItemType>).chance;
     if (result < going) {
-      return choices[i].result;
+      return asArray
+        ? choices[i] as ItemType
+        : (choices[i] as GachaChoice<ItemType>).result;
     }
     i += 1;
   }
-  return choices[Math.floor(Math.random() * choices.length)].result;
+  return asArray
+    ? choices[Math.floor(Math.random() * choices.length)] as ItemType
+    : (choices[Math.floor(Math.random() * choices.length)] as GachaChoice<
+      ItemType
+    >).result;
 }
