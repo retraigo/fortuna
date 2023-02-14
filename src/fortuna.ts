@@ -61,13 +61,12 @@ export class GachaMachine<T> {
     if (distinct && count > this.#items.length) {
       throw new RangeError(`count must be less than number of items in pool.`);
     }
-    const totalChance = this.#totalChance;
     const result = new Array<T>(count);
     let i = 0;
     if (distinct) {
       const data = this.#items.slice(0);
       while (i < count) {
-        const res = rollWithBinarySearch(data, totalChance);
+        const res = rollWithBinarySearch(data);
         result[i] = data[res].result;
         data.splice(res, 1);
         i += 1;
@@ -75,7 +74,7 @@ export class GachaMachine<T> {
     } else {
       const data = this.#items;
       while (i < count) {
-        result[i] = data[rollWithBinarySearch(data, totalChance)].result;
+        result[i] = data[rollWithBinarySearch(data)].result;
         i += 1;
       }
     }
@@ -85,10 +84,8 @@ export class GachaMachine<T> {
 
 function rollWithBinarySearch<T>(
   items: ComputedGachaData<T>[],
-  totalChance?: number,
 ): number {
-  // failing to provide totalChance does not affect performance.
-  if (!totalChance) totalChance = items[items.length - 1].cumulativeChance;
+  const totalChance = items[items.length - 1].cumulativeChance;
   if (items.length === 1) return 0;
   const rng = Math.random() * totalChance;
   let lower = 0;

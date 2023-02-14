@@ -1,125 +1,117 @@
 # fortuna v2
+
 Weighted gacha system.
 
 ## Usage
 
 Create an item using `GachaMachine.createItem`
 
-More weight = more common
+More weight = more common. Think of it as in terms of probability.
+
 ```js
+
+import { GachaMachine } from "https://deno.land/x/fortuna/mod.ts"
+// or
+import { GachaMachine } from "https://deno.land/x/fortuna/dist/fortuna.js"
+
 const items = [
     { result: "SSR cool character", chance: 1 },
     { result: "Kinda rare character", chance: 3 },
-    { result: "Mob character", chance: 5 },
-    { result: "Mob character", chance: 5 },
-    { result: "Mob character", chance: 5 },
-]
+    { result: "Mob character #1", chance: 5 },
+    { result: "Mob character #2", chance: 5 },
+    { result: "Mob character #3", chance: 5 },
+
 
 const machine = new GachaMachine(items)
 
-machine.get(10) // Rolls 10x 
+machine.get(10) // Rolls 10x
 
 /*
     My result:
     [
       "Kinda rare character",
-      "Mob character",
-      "Mob character",
-      "Mob character",
-      "Mob character",
+      "Mob character #1",
+      "Mob character #3",
+      "Mob character #3",
+      "Mob character #1",
       "Kinda rare character",
-      "Mob character",
-      "Mob character",
-      "Mob character",
-      "Mob character"
+      "Mob character #2",
+      "Mob character #2" ,
+      "Mob character #1",
+      "Mob character #2"
     ]
 */
 ```
 
 ### Plain weighted random selection
+
 You probably don't need all complicated stuff. Here's a quick way to just create a simple weight-based gacha system:
-(Only works on v1.1.0 and above)
+(Only works on v3.0.1 and above)
 
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna/mod.ts' // wherever you are importing from. 
+import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
 
 const items = [
     { result: "SSR cool character", chance: 1 },
     { result: "Kinda rare character", chance: 3 },
-    { result: "Mob character", chance: 5 },
-    { result: "Mob character", chance: 5 },
-    { result: "Mob character", chance: 5 },
-]
+    { result: "Mob character #1", chance: 5 },
+    { result: "Mob character #2", chance: 5 },
+    { result: "Mob character #3", chance: 5 },
+];
 
-GachaMachine.rollWithLinearSearch(items) // Rolls one item from the list of items using linear search.
+roll(items); // Rolls one item from the list of items using linear search.
 ```
 
-`GachaMachine#get()` works using Binary Search by default. Using the Binary Search method explicitly requires a different structure of data for input.
+You can also provide two individual arrays for choices and weights.
 
 ```ts
-import { GachaMachine } from 'https://deno.land/x/fortuna/mod.ts' // wherever you are importing from. 
+import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
 
 const items = [
-    { result: "SSR cool character", cumulativeChance: 1 },
-    { result: "Kinda rare character", cumulativeChance: 4 },
-    { result: "Mob character", cumulativeChance: 9 },
-    { result: "Mob character", cumulativeChance: 14 },
-    { result: "Mob character", cumulativeChance: 19 },
-]
+    "SSR cool character",
+    "Kinda rare character",
+    "Mob character #1",
+    "Mob character #2",
+    "Mob character #3",
+];
+const chances = [1, 3, 5, 5, 5];
 
-GachaMachine.rollWithBinarySearch(items) // Rolls one item from the list of items using linear search.
+roll(items, chances); // Rolls one item from the list of items using linear search.
 ```
 
-## How it works
-
-Fortuna has two algorithms, one being a static method in the `GachaMachine` class and one
-being a standalone function.
-
-### Algorithm 1
-
-Fortuna provides a simple function `roll` that generates a pseudo random number
-and performs linear search on the provided data in order to find the proper item.
+Providing the total chance may result in faster rolls.
 
 ```ts
-// JS PSEUDOCODE
+import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
 
-// Each choice is an object with 
-//     chance: number
-//     result: T (type parameter)
-// 
-// total chance can be supplied
-// manually or computed from data
-function roll(choices, total) {
-    // runs a loop to compute total
-    if(!total) total = sum_by_chance(data)
+const items = [
+    { result: "SSR cool character", chance: 1 },
+    { result: "Kinda rare character", chance: 3 },
+    { result: "Mob character #1", chance: 5 },
+    { result: "Mob character #2", chance: 5 },
+    { result: "Mob character #3", chance: 5 },
+];
 
-    // generate random number for choosing
-    let rng = random_number(0, total)
-
-    // run a loop to find the choice
-    let current = 0.0;
-    for (choice in data) {
-        current = current + choice.chance;
-        if(rng < current) return choice.result;
-    }
-}
+roll(items, 19); // Rolls one item from the list of items using linear search.
 ```
 
-Fortuna's default `GachaMachine.get()` uses a more complex, but faster approach.
+```ts
+import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
 
-- When the `GachaMachine` class is instantiated, data is transformed into a form
-  suitable for binary search.
+const items = [
+    "SSR cool character",
+    "Kinda rare character",
+    "Mob character #1",
+    "Mob character #2",
+    "Mob character #3",
+];
+const chances = [1, 3, 5, 5, 5];
 
-- When `GachaMachine.get()` is run, Fortuna performs binary search on this transformed
-  data.
-
-The `roll` function is more suitable when the weighted data is used only once.
-
-The `get` method is suitable when the weighted data is reused. It comes at extra cost 
-during initialization but compensates for it with better performance when sampling.
+roll(items, chances, 19); // Rolls one item from the list of items using linear search.
+```
 
 ## Documentation
+
 Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
 
 A guide for usage can be found in [docs.nekooftheabyss.moe](https://docs.nekooftheabyss.moe/fortuna) (not updated for v3 yet).
-

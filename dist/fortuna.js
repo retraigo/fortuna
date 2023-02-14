@@ -32,13 +32,12 @@ class GachaMachine {
         if (distinct && count > this.#items.length) {
             throw new RangeError(`count must be less than number of items in pool.`);
         }
-        const totalChance = this.#totalChance;
         const result = new Array(count);
         let i = 0;
         if (distinct) {
             const data = this.#items.slice(0);
             while(i < count){
-                const res = rollWithBinarySearch(data, totalChance);
+                const res = rollWithBinarySearch(data);
                 result[i] = data[res].result;
                 data.splice(res, 1);
                 i += 1;
@@ -46,15 +45,15 @@ class GachaMachine {
         } else {
             const data1 = this.#items;
             while(i < count){
-                result[i] = data1[rollWithBinarySearch(data1, totalChance)].result;
+                result[i] = data1[rollWithBinarySearch(data1)].result;
                 i += 1;
             }
         }
         return result;
     }
 }
-function rollWithBinarySearch(items, totalChance) {
-    if (!totalChance) totalChance = items[items.length - 1].cumulativeChance;
+function rollWithBinarySearch(items) {
+    const totalChance = items[items.length - 1].cumulativeChance;
     if (items.length === 1) return 0;
     const rng = Math.random() * totalChance;
     let lower = 0;
