@@ -43,17 +43,15 @@ export function roll<ItemType>(
   chanceArrOrTotalChance: number | number[] = 0,
   totalChance = 0,
 ): ItemType {
-  let total = Array.isArray(chanceArrOrTotalChance)
-    ? totalChance
-    : chanceArrOrTotalChance || 0;
   const asArray = Array.isArray(chanceArrOrTotalChance);
+  let total = asArray ? totalChance : chanceArrOrTotalChance || 0;
   if (typeof total !== "number") {
     throw new TypeError(
       `Invalid type for total chance. Expected 'undefined' or 'number', got '${typeof total}'`,
     );
   }
   let i = 0;
-  if (totalChance === 0) {
+  if (total === 0) {
     while (i < choices.length) {
       total += asArray
         ? chanceArrOrTotalChance[i]
