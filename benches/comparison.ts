@@ -28,7 +28,7 @@ const itemsForPicker = items.map((x) => ({
 }));
 const itemsForRWC = items.map((x) => ({ id: x.result, weight: x.chance }));
 
-console.log(items.reduce((acc, a) => acc + a.chance, 0), items.length);
+const totalChance = items.reduce((acc, a) => acc + a.chance, 0);
 
 /**
  * No op
@@ -80,9 +80,21 @@ Deno.bench("retraigo/fortuna", { baseline: true, group: "gacha" }, () => {
   machine.get(1e4);
 });
 
-/** */
+/** 
+ * Plain rolls without requiring any setup
+ */
 Deno.bench("retraigo/fortuna/roll", {  group: "gacha" }, () => {
   for (let i = 0; i < 1e4; ++i) {
     roll(items);
+  }
+});
+
+/** 
+ * Plain rolls without requiring any setup
+ * with totalChance
+ */
+Deno.bench("retraigo/fortuna/roll (with totalChance)", {  group: "gacha" }, () => {
+  for (let i = 0; i < 1e4; ++i) {
+    roll(items, totalChance);
   }
 });
