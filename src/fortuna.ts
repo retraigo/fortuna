@@ -1,4 +1,4 @@
-// Copyright 2022 NeTT. All rights reserved. MIT license.
+// Copyright 2022-2023 NeTT. All rights reserved. MIT license.
 
 /**
  * Data fed to the constructor.
