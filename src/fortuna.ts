@@ -90,7 +90,7 @@ function rollWithBinarySearch<T>(
   const rng = Math.random() * totalChance;
   let lower = 0;
   let max = items.length - 1;
-  let mid = Math.trunc((max + lower) / 2);
+  let mid = (max + lower) >> 1;
   while (
     mid != 0 && lower <= max
   ) {
@@ -101,10 +101,10 @@ function rollWithBinarySearch<T>(
     ) return mid;
     if (items[mid].cumulativeChance < rng) {
       lower = mid + 1;
-      mid = Math.trunc((max + lower) / 2);
+      mid = (max + lower) >> 1;
     } else {
       max = mid - 1;
-      mid = Math.trunc((max + lower) / 2);
+      mid = (max + lower) >> 1;
     }
   }
   return mid;
