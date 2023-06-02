@@ -8,7 +8,7 @@ import { GachaMachine, roll } from "../mod.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 
-import { RandomPicker } from "https://deno.land/x/wrand@v1.1.0/mod.ts";
+import { RandomPicker } from "https://deno.land/x/wrand@v1.2.0/mod.ts";
 
 import wrs from "https://esm.sh/weighted-randomly-select@1.0.6";
 
