@@ -25,15 +25,12 @@ export interface ComputedGachaData<T> {
  */
 export class GachaMachine<T> {
   #items: ComputedGachaData<T>[];
-  #totalChance: number;
   constructor(items: GachaChoice<T>[]) {
     this.#items = new Array(items.length);
-    this.#totalChance = 0;
     this.#configItems(items);
   }
   set items(items: GachaChoice<T>[]) {
     this.#items = new Array(items.length);
-    this.#totalChance = 0;
     this.#configItems(items);
   }
   /** Setup items for rolling. */
@@ -48,7 +45,6 @@ export class GachaMachine<T> {
       };
       i += 1;
     }
-    this.#totalChance = cumulativeChance;
   }
   /**
    * Roll items from the gacha machine.
