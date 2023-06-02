@@ -52,6 +52,10 @@ export class GachaMachine<T> {
    * const machine = new GachaMachine(items);
    * machine.get(11)
    * ```
+   * 
+   * You can roll `n` distinct items using the `get(n, true)` format.
+   * However, rolling distinct items does not mutate the pool.
+   * The items rolled are only distinct within the `n` items.
    */
   get(count: number, distinct = false) {
     if (distinct && count > this.#items.length) {
