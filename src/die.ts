@@ -91,5 +91,3 @@ export function rollDie(
 function getRandom(n: number) {
   return Math.floor(Math.random() * n) + 1;
 }
-
-console.log(rollDie("3d10"));
