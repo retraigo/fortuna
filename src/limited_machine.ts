@@ -9,19 +9,24 @@ export interface GachaChoice<T> {
   result: T;
   chance: number;
 }
+
+/**
+ * Data transformed by the constructor, fed to the binary search function.
+ * The `result` property holds the result that will be returned after rolling.
+ * `cumulativeChance` is used to make it fit for binary search.
+ */
+export interface ComputedGachaData<T> {
+  result: T;
+  cumulativeChance: number;
+}
+
 /**
  * Gacha system.
  */
-export class GachaMachine<T> {
-  #items: T[];
-  #weights: number[];
-  #alias: number[];
-  #totalChance: number;
+export class LimitedGachaMachine<T> {
+  #items: ComputedGachaData<T>[];
   constructor(items: GachaChoice<T>[]) {
     this.#items = new Array(items.length);
-    this.#alias = new Array(items.length);
-    this.#weights = new Array(items.length);
-    this.#totalChance = 0;
     this.#configItems(items);
   }
   set items(items: GachaChoice<T>[]) {
@@ -30,34 +35,15 @@ export class GachaMachine<T> {
   }
   /** Setup items for rolling. */
   #configItems(items: GachaChoice<T>[]) {
-    this.#alias.fill(-1);
-    this.#weights.fill(-1);
     let i = 0;
+    let cumulativeChance = 0;
     while (i < items.length) {
-      this.#totalChance += items[i].chance;
+      cumulativeChance += items[i].chance;
+      this.#items[i] = {
+        result: items[i].result,
+        cumulativeChance: cumulativeChance,
+      };
       i += 1;
-    }
-    i = 0;
-    const multiplier = items.length / this.#totalChance;
-    const long = [], small = [];
-    while (i < items.length) {
-      const prob = items[i].chance * multiplier;
-      if (prob > 1) long.push(i);
-      else small.push(i);
-      this.#items[i] = items[i].result;
-      this.#weights[i] = prob;
-      i += 1;
-    }
-    while (long.length && small.length) {
-      const j = small.pop();
-      const k = long.at(-1);
-      if (j === undefined || k === undefined) {
-        throw new Error(
-          "This definitely shouldn't happen. Open an issue at https://github.com/retraigo/fortuna",
-        ); // this will hopefully never happen
-      }
-      this.#alias[j] = k;
-      this.#weights[k] -= 1 - this.#weights[j];
     }
   }
   /**
@@ -66,23 +52,60 @@ export class GachaMachine<T> {
    * const machine = new GachaMachine(items);
    * machine.get(11)
    * ```
-   *
-   * If you are looking for the `distinct` rolls,
-   * try importing GachaMachine3 instead of GachaMachine.
+   * 
+   * You can roll `n` distinct items using the `get(n, true)` format.
+   * However, rolling distinct items does not mutate the pool.
+   * The items rolled are only distinct within the `n` items.
    */
-  get(count: number): T[] {
-    let i = 0;
-    const res = new Array(count);
-    while (i < count) {
-      res[i] = this.#items[this.#roll()];
-      i += 1;
+  get(count: number, distinct = false) {
+    if (distinct && count > this.#items.length) {
+      throw new RangeError(`count must be less than number of items in pool.`);
     }
-    return res;
+    const result = new Array<T>(count);
+    let i = 0;
+    if (distinct) {
+      const data = this.#items.slice(0);
+      while (i < count) {
+        const res = rollWithBinarySearch(data);
+        result[i] = data[res].result;
+        data.splice(res, 1);
+        i += 1;
+      }
+    } else {
+      const data = this.#items;
+      while (i < count) {
+        result[i] = data[rollWithBinarySearch(data)].result;
+        i += 1;
+      }
+    }
+    return result;
   }
-  #roll(): number {
-    const inter = Math.random() * this.#items.length
-    const i = ~~inter
-    const y = inter - i
-    return y < this.#weights[i] ? i : this.#alias[i];
+}
+
+function rollWithBinarySearch<T>(
+  items: ComputedGachaData<T>[],
+): number {
+  const totalChance = items[items.length - 1].cumulativeChance;
+  if (items.length === 1) return 0;
+  const rng = Math.random() * totalChance;
+  let lower = 0;
+  let max = items.length - 1;
+  let mid = (max + lower) >> 1;
+  while (
+    mid != 0 && lower <= max
+  ) {
+    if (
+      (items[mid].cumulativeChance > rng &&
+        items[mid - 1].cumulativeChance < rng) ||
+      items[mid].cumulativeChance == rng
+    ) return mid;
+    if (items[mid].cumulativeChance < rng) {
+      lower = mid + 1;
+      mid = (max + lower) >> 1;
+    } else {
+      max = mid - 1;
+      mid = (max + lower) >> 1;
+    }
   }
+  return mid;
 }
