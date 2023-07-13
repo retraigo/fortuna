@@ -2,7 +2,6 @@ Here's a few guidelines for contributing to this repo:
 
 * All files must be formatted with `deno fmt` and checked with `deno lint`.
 * Types and Interfaces should be in `PascalCase` while Functions and Methods should be in `camelCase`.
-* Point your pull requests to the `dev` branch. They will be merged with `main` before making a new release.
 * Discuss changes on our Discord server mentioned below.
 * Do not make a pull request proposing support for CommonJS.
 
