@@ -4,15 +4,13 @@ Weighted gacha system.
 
 ## Usage
 
-Create an item using `GachaMachine.createItem`
-
 More weight = more common. Think of it as in terms of probability.
 
 ```js
 
 import { GachaMachine } from "https://deno.land/x/fortuna/mod.ts"
 // or
-import { GachaMachine } from "https://deno.land/x/fortuna/dist/fortuna.js"
+import { GachaMachine } from "https://deno.land/x/fortuna/dist/machine.js"
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -113,5 +111,3 @@ roll(items, chances, 19); // Rolls one item from the list of items using linear 
 ## Documentation
 
 Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
-
-A guide for usage can be found in [docs.nekooftheabyss.moe](https://docs.nekooftheabyss.moe/fortuna) (not updated for v3 yet).
