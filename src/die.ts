@@ -26,14 +26,14 @@ export interface RollOptions {
   face?: number;
   separate?: boolean;
 }
-const defaultRollOptions: RollOptions = { times: 1, face: 6, separate: true };
+const defaultRollOptions: RollOptions = { times: 1, face: 6, separate: false };
 
 export function rollDie(exp: string, separate?: boolean): number | number[];
 export function rollDie(options: RollOptions): number | number[];
 export function rollDie(): number;
 export function rollDie(
   optOrExp?: RollOptions | string,
-  expSeparate = true,
+  expSeparate = false,
 ): number | number[] {
   if (typeof optOrExp === "undefined") {
     return getRandom(6);
@@ -61,8 +61,8 @@ export function rollDie(
     }
   } else if (typeof optOrExp === "object") {
     const { times, face, separate } = { ...defaultRollOptions, ...optOrExp };
-    console.log(times)
-    if(!times) throw new Error("Invalid value for `times`.")
+    console.log(times);
+    if (!times) throw new Error("Invalid value for `times`.");
     if (times === 1) return getRandom(face || 6);
     else {
       if (!separate) {
@@ -83,9 +83,8 @@ export function rollDie(
         return res;
       }
     }
-  }
-  else {
-    throw new Error(`Paramaters are not of the required format.`)
+  } else {
+    throw new Error(`Paramaters are not of the required format.`);
   }
 }
 
@@ -93,4 +92,4 @@ function getRandom(n: number) {
   return Math.floor(Math.random() * n) + 1;
 }
 
-console.log(rollDie("3d10"))
+console.log(rollDie("3d10"));

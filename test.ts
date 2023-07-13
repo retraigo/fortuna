@@ -5,7 +5,7 @@ import {
   assertExists,
   assertThrows,
 } from "https://deno.land/std@0.190.0/testing/asserts.ts";
-import { GachaMachine, GachaMachine3, roll } from "./mod.ts";
+import { GachaMachine, LimitedGachaMachine, roll, rollDie } from "./mod.ts";
 
 const testData = [
   { result: "SSR cool character", chance: 1 },
@@ -26,7 +26,7 @@ Deno.test({
 Deno.test({
   name: "V3: Is GachaMachine defined?",
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
     assertExists(machine);
   },
 });
@@ -34,7 +34,7 @@ Deno.test({
 Deno.test({
   name: `V3: Roll 3 unique items from a collection of 5 items`,
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
     const res = machine.get(3, true);
     assertExists(res);
   },
@@ -43,7 +43,7 @@ Deno.test({
 Deno.test({
   name: `V3: Roll 5 unique items from a collection of 5 items`,
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
     const res = machine.get(5, true);
     assertArrayIncludes(res, [
       "SSR cool character",
@@ -58,7 +58,7 @@ Deno.test({
 Deno.test({
   name: `V3: Roll 7 unique items from a collection of 5 items (throw error)`,
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
     assertThrows(() => machine.get(7, true));
   },
 });
@@ -67,15 +67,14 @@ Deno.test({
   name:
     `V3: Roll 7 non-unique items from a collection of 5 items (don't throw error)`,
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
     const res = machine.get(7);
     assertEquals(res.length, 7);
   },
 });
 
 Deno.test({
-  name:
-    `V4: Roll 7 non-unique items from a collection of 5 items`,
+  name: `V4: Roll 7 non-unique items from a collection of 5 items`,
   fn() {
     const machine = new GachaMachine(testData);
     const res = machine.get(7);
@@ -105,9 +104,9 @@ Deno.test({
   name:
     `V3: Machine can be updated by just setting machine.items after initialization.`,
   fn() {
-    const machine = new GachaMachine3(testData);
+    const machine = new LimitedGachaMachine(testData);
 
-    const machine2 = new GachaMachine3(testData.slice(0, 3));
+    const machine2 = new LimitedGachaMachine(testData.slice(0, 3));
 
     machine.items = testData.slice(0, 3);
 
@@ -120,7 +119,8 @@ Deno.test({
 });
 
 Deno.test({
-  name: `Single Roll: Roll 1 items from a collection of 5 items using the roll() method`,
+  name:
+    `Single Roll: Roll 1 items from a collection of 5 items using the roll() method`,
   fn() {
     const res = roll(testData);
     console.log(`Rolled: `, res);
@@ -138,6 +138,49 @@ Deno.test({
     );
     console.log(`Rolled: `, res);
     assertExists(res);
+  },
+});
+
+Deno.test({
+  name: `Roll a simple die once`,
+  fn() {
+    const res = rollDie();
+    console.log(`Die Rolled: `, res);
+    assert(typeof res === "number" && res >= 1 && res <= 6);
+  },
+});
+
+Deno.test({
+  name: `Roll a simple die thrice`,
+  fn() {
+    const res = rollDie({ times: 3, face: 6, separate: true });
+    console.log(`Die Rolled: `, res);
+    assert(Array.isArray(res) && res.every((x) => x >= 1 && x <= 6));
+  },
+});
+
+Deno.test({
+  name: `Roll a simple die and sum all rolls`,
+  fn() {
+    const res = rollDie({ times: 3, face: 6, separate: false });
+    console.log(`Die Rolled: `, res);
+    assert(typeof res === "number" && res >= 6 && res <= 36);
+  },
+});
+
+Deno.test({
+  name: `Roll a 6d9 die and sum all rolls`,
+  fn() {
+    const res = rollDie("6d9", false);
+    console.log(`Die Rolled: `, res);
+    assert(typeof res === "number" && res >= 6 && res <= 54);
+  },
+});
+
+Deno.test({
+  name: `Attempt to roll a 6dd die (should throw)`,
+  fn() {
+    assertThrows(() => rollDie("6dd"));
   },
 });
 
