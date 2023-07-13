@@ -1,3 +1,4 @@
-export { GachaMachine } from "./src/v4.ts";
-export { LimitedGachaMachine } from "./src/v3.ts";
+export { GachaMachine } from "./src/machine.ts";
+export { LimitedGachaMachine } from "./src/limited_machine.ts";
+export { rollDie } from "./src/die.ts";
 export { roll } from "./src/roll.ts";
