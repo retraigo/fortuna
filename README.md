@@ -1,6 +1,6 @@
-# fortuna v2
+# Fortuna
 
-Weighted gacha system.
+A Gacha-like system to roll random items with weights.
 
 ## Usage
 
