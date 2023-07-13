@@ -23,7 +23,7 @@ export interface ComputedGachaData<T> {
 /**
  * Gacha system.
  */
-export class GachaMachine<T> {
+export class LimitedGachaMachine<T> {
   #items: ComputedGachaData<T>[];
   constructor(items: GachaChoice<T>[]) {
     this.#items = new Array(items.length);
