@@ -61,7 +61,6 @@ function rollDie(optOrExp = defaultRollOptions, expSeparate = false) {
             ...defaultRollOptions,
             ...optOrExp
         };
-        console.log(times);
         if (!times) throw new Error("Invalid value for `times`.");
         if (times === 1) return getRandom(face || 6);
         else {
