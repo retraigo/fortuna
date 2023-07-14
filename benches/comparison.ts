@@ -4,15 +4,15 @@
  * Total number of items in pool: 905
  */
 
-import { GachaMachine, roll, GachaMachine3 } from "../mod.ts";
+import { GachaMachine, roll } from "../mod.ts";
 
 import pokemon from "../testdata/pokemon.json" assert { type: "json" };
 
 import { RandomPicker } from "https://deno.land/x/wrand@v1.2.0/mod.ts";
 
-import wrs from "https://esm.sh/weighted-randomly-select@1.0.6";
+import wrs from "npm:weighted-randomly-select";
 
-import rwc from "https://esm.sh/random-weighted-choice@0.1.4";
+import rwc from "npm:random-weighted-choice";
 
 import { select } from "https://deno.land/x/masx200_weighted_randomly_select@2.1.1/mod.ts";
 
@@ -77,15 +77,6 @@ Deno.bench("Balastrong/wrand", { group: "gacha" }, () => {
  */
 Deno.bench("retraigo/fortuna v4", { baseline: true, group: "gacha" }, () => {
   const machine = new GachaMachine(items);
-  machine.get(1e4);
-});
-
-/**
- * Initializing class is done in the bench too
- * to avoid bias.
- */
-Deno.bench("retraigo/fortuna v3", { group: "gacha" }, () => {
-  const machine = new GachaMachine3(items);
   machine.get(1e4);
 });
 
