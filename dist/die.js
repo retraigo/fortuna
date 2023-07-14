@@ -3,34 +3,39 @@
 // This code was bundled using `deno bundle` and it's not recommended to edit it manually
 
 function parseExpression(exp) {
-    const matches = /^\s*(\d*)\s*d\s*(\d+)\s*$/.exec(exp);
+    const matches = /^\s*(\d*)\s*d\s*(\d+)\s*([-+])*\s*(\d*)\s*$/.exec(exp);
     if (!matches) {
         throw new Error(`Die Expression ${exp} is not of the format <count>d<faces> (eg. 2d10)`);
     }
     const times = Number(matches[1]);
     const face = Number(matches[2]);
+    let modifier = Number(matches[4]);
+    if (matches[3] === "-") modifier *= -1;
+    else if (!matches[3]) modifier = 0;
     if (isNaN(face)) {
         throw new Error(`Die Expression ${exp} is not of the format <count>d<faces> (eg. 2d10)`);
-    } else if (isNaN(times)) {
+    } else {
         return {
-            times: 1,
-            face
+            times: times || 1,
+            face,
+            modifier: modifier || 0
         };
-    } else return {
-        times,
-        face
-    };
+    }
 }
 const defaultRollOptions = {
     times: 1,
     face: 6,
-    separate: false
+    separate: false,
+    modifier: 0
 };
-function rollDie(optOrExp, expSeparate = false) {
+function rollDie(optOrExp = defaultRollOptions, expSeparate = false) {
     if (typeof optOrExp === "undefined") {
         return getRandom(6);
     } else if (typeof optOrExp === "string") {
-        const { times , face  } = parseExpression(optOrExp);
+        const { times , face , modifier  } = parseExpression(optOrExp);
+        if (modifier && expSeparate) {
+            throw new Error("Cannot add a modifier when rolling dice separately.");
+        }
         if (times === 1) return getRandom(face);
         else {
             if (!expSeparate) {
@@ -40,7 +45,7 @@ function rollDie(optOrExp, expSeparate = false) {
                     res += getRandom(face);
                     i += 1;
                 }
-                return res;
+                return res + modifier;
             } else {
                 const res = new Array(times);
                 let i = 0;
@@ -52,7 +57,7 @@ function rollDie(optOrExp, expSeparate = false) {
             }
         }
     } else if (typeof optOrExp === "object") {
-        const { times , face , separate  } = {
+        const { times , face , separate , modifier  } = {
             ...defaultRollOptions,
             ...optOrExp
         };
@@ -67,8 +72,11 @@ function rollDie(optOrExp, expSeparate = false) {
                     res += getRandom(face || 6);
                     i += 1;
                 }
-                return res;
+                return res + (modifier || 0);
             } else {
+                if (modifier) {
+                    throw new Error("Cannot add a modifier when rolling dice separately.");
+                }
                 const res = new Array(times);
                 let i = 0;
                 while(i < times){
