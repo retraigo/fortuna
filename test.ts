@@ -35,7 +35,7 @@ Deno.test({
   name: `V3: Roll 3 unique items from a collection of 5 items`,
   fn() {
     const machine = new LimitedGachaMachine(testData);
-    const res = machine.get(3, true);
+    const res = machine.get(3);
     assertExists(res);
   },
 });
@@ -44,7 +44,7 @@ Deno.test({
   name: `V3: Roll 5 unique items from a collection of 5 items`,
   fn() {
     const machine = new LimitedGachaMachine(testData);
-    const res = machine.get(5, true);
+    const res = machine.get(5);
     assertArrayIncludes(res, [
       "SSR cool character",
       "Kinda rare character",
@@ -59,17 +59,7 @@ Deno.test({
   name: `V3: Roll 7 unique items from a collection of 5 items (throw error)`,
   fn() {
     const machine = new LimitedGachaMachine(testData);
-    assertThrows(() => machine.get(7, true));
-  },
-});
-
-Deno.test({
-  name:
-    `V3: Roll 7 non-unique items from a collection of 5 items (don't throw error)`,
-  fn() {
-    const machine = new LimitedGachaMachine(testData);
-    const res = machine.get(7);
-    assertEquals(res.length, 7);
+    assertThrows(() => machine.get(7));
   },
 });
 
@@ -151,7 +141,7 @@ Deno.test({
 });
 
 Deno.test({
-  name: `Roll a simple die thrice`,
+  name: `Roll 3 simple dice`,
   fn() {
     const res = rollDie({ times: 3, face: 6, separate: true });
     console.log(`Die Rolled: `, res);
@@ -160,25 +150,34 @@ Deno.test({
 });
 
 Deno.test({
-  name: `Roll a simple die and sum all rolls`,
+  name: `Roll 3 simple dice and sum all rolls`,
   fn() {
-    const res = rollDie({ times: 3, face: 6, separate: false });
+    const res = rollDie({ times: 3, face: 6 });
     console.log(`Die Rolled: `, res);
-    assert(typeof res === "number" && res >= 6 && res <= 36);
+    assert(typeof res === "number" && res >= 3 && res <= 18);
   },
 });
 
 Deno.test({
-  name: `Roll a 6d9 die and sum all rolls`,
+  name: `Roll 6d9 and sum all rolls`,
   fn() {
-    const res = rollDie("6d9", false);
+    const res = rollDie("6d9");
     console.log(`Die Rolled: `, res);
     assert(typeof res === "number" && res >= 6 && res <= 54);
   },
 });
 
 Deno.test({
-  name: `Attempt to roll a 6dd die (should throw)`,
+  name: `Roll 6d9 with a +12 modifier`,
+  fn() {
+    const res = rollDie("6d9+12");
+    console.log(`Die Rolled: `, res);
+    assert(typeof res === "number" && res >= 18 && res <= 66);
+  },
+});
+
+Deno.test({
+  name: `Attempt to roll 6dd (should throw)`,
   fn() {
     assertThrows(() => rollDie("6dd"));
   },
