@@ -18,7 +18,7 @@ const items = [
     { result: "Mob character #1", chance: 5 },
     { result: "Mob character #2", chance: 5 },
     { result: "Mob character #3", chance: 5 },
-
+]
 
 const machine = new GachaMachine(items)
 
@@ -37,6 +37,42 @@ machine.get(10) // Rolls 10x
       "Mob character #2" ,
       "Mob character #1",
       "Mob character #2"
+    ]
+*/
+```
+
+### Rolling distinct elements
+You can roll distinct elements using the `LimitedGachaMachine`. It is slower
+than `GachaMachine` but there shouldn't be much noticeable difference.
+
+The "distinct" behavior only applies to within a single `.get()` call. It
+doesn't affect the pool of items used when initializing `new LimitedGachaMachine()`.
+
+```js
+
+import { LimitedGachaMachine } from "https://deno.land/x/fortuna/mod.ts"
+// or
+import { LimitedGachaMachine } from "https://deno.land/x/fortuna/dist/limited_machine.js"
+
+const items = [
+    { result: "SSR cool character", chance: 1 },
+    { result: "Kinda rare character", chance: 3 },
+    { result: "Mob character #1", chance: 5 },
+    { result: "Mob character #2", chance: 5 },
+    { result: "Mob character #3", chance: 5 },
+]
+
+const machine = new LimitedGachaMachine(items)
+
+machine.get(4) // Rolls 4x
+
+/*
+    My result:
+    [
+      "Kinda rare character",
+      "Mob character #1",
+      "Mob character #3",
+      "Mob character #2",
     ]
 */
 ```
