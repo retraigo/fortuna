@@ -21,7 +21,8 @@ export interface ComputedGachaData<T> {
 }
 
 /**
- * Gacha system.
+ * Gacha system for rolling n distinct items
+ * from the weighted collection.
  */
 export class LimitedGachaMachine<T> {
   #items: ComputedGachaData<T>[];
@@ -47,36 +48,27 @@ export class LimitedGachaMachine<T> {
     }
   }
   /**
-   * Roll items from the gacha machine.
+   * Roll distinct items from the gacha machine.
    * ```ts
    * const machine = new GachaMachine(items);
    * machine.get(11)
    * ```
-   * 
-   * You can roll `n` distinct items using the `get(n, true)` format.
+   *
    * However, rolling distinct items does not mutate the pool.
    * The items rolled are only distinct within the `n` items.
    */
-  get(count: number, distinct = false) {
-    if (distinct && count > this.#items.length) {
+  get(count: number) {
+    if (count > this.#items.length) {
       throw new RangeError(`count must be less than number of items in pool.`);
     }
     const result = new Array<T>(count);
     let i = 0;
-    if (distinct) {
-      const data = this.#items.slice(0);
-      while (i < count) {
-        const res = rollWithBinarySearch(data);
-        result[i] = data[res].result;
-        data.splice(res, 1);
-        i += 1;
-      }
-    } else {
-      const data = this.#items;
-      while (i < count) {
-        result[i] = data[rollWithBinarySearch(data)].result;
-        i += 1;
-      }
+    const data = this.#items.slice(0);
+    while (i < count) {
+      const res = rollWithBinarySearch(data);
+      result[i] = data[res].result;
+      data.splice(res, 1);
+      i += 1;
     }
     return result;
   }
