@@ -1,6 +1,16 @@
 {
-    "tasks": {
-        "bench": "deno bench --unstable benches/comparison.ts",
-        "test": "deno test test.ts"
+    "bench": {
+        "files": {
+            "include": [
+                "./benches/comparison.ts"
+            ]
+        }
+    },
+    "test": {
+        "files": {
+            "include": [
+                "./test.ts"
+            ]
+        }
     }
 }

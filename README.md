@@ -1,4 +1,5 @@
 # Fortuna
+The quick solution for everything random!
 
 A Gacha-like system to roll random items with weights.
 

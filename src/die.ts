@@ -1,3 +1,5 @@
+// A biased die can be implemented using GachaMachine.
+
 export interface DieConfig {
   times: number;
   face: number;

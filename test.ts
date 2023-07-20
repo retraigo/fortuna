@@ -6,6 +6,7 @@ import {
   assertThrows,
 } from "https://deno.land/std@0.190.0/testing/asserts.ts";
 import { GachaMachine, LimitedGachaMachine, roll, rollDie } from "./mod.ts";
+import { unbiasedCoin } from "./src/coin.ts";
 
 const testData = [
   { result: "SSR cool character", chance: 1 },
@@ -180,6 +181,22 @@ Deno.test({
   name: `Attempt to roll 6dd (should throw)`,
   fn() {
     assertThrows(() => rollDie("6dd"));
+  },
+});
+
+Deno.test({
+  name: `Toss an unbiased coin (should return ["H"] or ["T"])`,
+  fn() {
+    const res = unbiasedCoin();
+    assert(res.length === 1 && res[0] === "H" || res[0] === "T");
+  },
+});
+
+Deno.test({
+  name: `Toss N unbiased coins (should return an array of "H" or "T")`,
+  fn() {
+    const res = unbiasedCoin();
+    assert(res.length === 1 && res.every((x) => x === "H" || x === "T"));
   },
 });
 
