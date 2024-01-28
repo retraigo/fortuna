@@ -1,5 +1,3 @@
-// A biased die can be implemented using GachaMachine.
-
 export interface DieConfig {
   times: number;
   face: number;
@@ -40,9 +38,24 @@ const defaultRollOptions: RollOptions = {
   modifier: 0,
 };
 
+/**
+ * Roll an unbiased die. 
+ * A biased die can be implemented using GachaMachine.
+ * @param exp Die expression
+ * @param separate whether to consider each roll individually
+ */
 export function rollDie(exp: string, separate?: boolean): number | number[];
+/**
+ * Roll an unbiased die.
+ * A biased die can be implemented using GachaMachine.
+ * @param options Options for rolling the die.
+ */
 export function rollDie(options: RollOptions): number | number[];
 export function rollDie(): number;
+/**
+ * Roll an unbiased die.
+ * A biased die can be implemented using GachaMachine.
+ */
 export function rollDie(
   optOrExp: RollOptions | string = defaultRollOptions,
   expSeparate = false,

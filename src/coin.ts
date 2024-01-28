@@ -1,7 +1,7 @@
-// A biased coin can be implemented using GachaMachine.
-
 /**
  * Toss n unbiased coins (50% chance of head / tail).
+ * A biased coin can be implemented using GachaMachine.
+ * Do not toss more than 62 coins at once.
  * @param n Number of coins to toss.
  * @returns Array of results. Returns "H" for head and "T" for tail.
  */
