@@ -57,7 +57,7 @@ export class LimitedGachaMachine<T> {
    * However, rolling distinct items does not mutate the pool.
    * The items rolled are only distinct within the `n` items.
    */
-  get(count: number) {
+  get(count: number): T[] {
     if (count > this.#items.length) {
       throw new RangeError(`count must be less than number of items in pool.`);
     }

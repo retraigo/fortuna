@@ -1,16 +1,25 @@
 {
-    "bench": {
-        "files": {
-            "include": [
-                "./benches/comparison.ts"
-            ]
-        }
-    },
-    "test": {
-        "files": {
-            "include": [
-                "./test.ts"
-            ]
-        }
+  "name": "@nekooftheabyss/fortuna",
+  "version": "4.1.0",
+  "exports": "./mod.ts",
+  "exclude": [
+    "benches",
+    ".github",
+    ".vscode",
+    "dist",
+  ],
+  "bench": {
+    "files": {
+      "include": [
+        "./benches/comparison.ts"
+      ]
     }
+  },
+  "test": {
+    "files": {
+      "include": [
+        "./test.ts"
+      ]
+    }
+  }
 }

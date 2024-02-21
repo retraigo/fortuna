@@ -4,7 +4,7 @@ import {
   assertEquals,
   assertExists,
   assertThrows,
-} from "https://deno.land/std@0.190.0/testing/asserts.ts";
+} from "jsr:@std/assert@0.216";
 import { GachaMachine, LimitedGachaMachine, roll, rollDie } from "./mod.ts";
 import { unbiasedCoin } from "./src/coin.ts";
 
