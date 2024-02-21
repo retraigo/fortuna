@@ -1,12 +1,12 @@
 {
   "name": "@nekooftheabyss/fortuna",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "exports": "./mod.ts",
   "exclude": [
     "benches",
     ".github",
     ".vscode",
-    "dist",
+    "dist"
   ],
   "bench": {
     "files": {
