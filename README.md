@@ -117,7 +117,7 @@ roll(items, chances); // Rolls one item from the list of items using linear sear
 Providing the total chance may result in faster rolls.
 
 ```ts
-import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.1"; // wherever you are importing from.
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -131,7 +131,7 @@ roll(items, 19); // Rolls one item from the list of items using linear search.
 ```
 
 ```ts
-import { roll } from "https://deno.land/x/fortuna/src/roll.ts"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.1"; // wherever you are importing from.
 
 const items = [
     "SSR cool character",
@@ -147,4 +147,4 @@ roll(items, chances, 19); // Rolls one item from the list of items using linear 
 
 ## Documentation
 
-Documentation for the latest version can be found in [https://doc.deno.land/https://deno.land/x/fortuna/mod.ts](https://doc.deno.land/https://deno.land/x/fortuna/mod.ts)
+Documentation for the latest version can be found in [jsr:@nekooftheabyss/fortuna](https://jsr.io/@nekooftheabyss/fortuna)

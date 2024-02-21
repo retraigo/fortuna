@@ -1,25 +1,19 @@
 {
   "name": "@nekooftheabyss/fortuna",
   "version": "4.1.1",
-  "exports": "./mod.ts",
+  "exports": {
+    ".": "./mod.ts",
+    "roll": "./src/roll.ts"
+  },
   "exclude": [
     "benches",
     ".github",
     ".vscode",
     "dist"
   ],
-  "bench": {
-    "files": {
-      "include": [
-        "./benches/comparison.ts"
-      ]
-    }
-  },
   "test": {
-    "files": {
-      "include": [
-        "./test.ts"
-      ]
-    }
+    "include": [
+      "./test.ts"
+    ]
   }
 }
