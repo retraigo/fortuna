@@ -3,7 +3,7 @@
   "version": "4.1.1",
   "exports": {
     ".": "./mod.ts",
-    "roll": "./src/roll.ts"
+    "./roll": "./src/roll.ts"
   },
   "exclude": [
     "benches",
