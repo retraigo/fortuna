@@ -39,7 +39,8 @@ export class GachaMachine<T> {
     }
     i = 0;
     const multiplier = items.length / this.#totalChance;
-    const long = [], small = [];
+    const long = [],
+      small = [];
     while (i < items.length) {
       const prob = items[i].chance * multiplier;
       if (prob > 1) long.push(i);
@@ -53,7 +54,7 @@ export class GachaMachine<T> {
       const k = long.at(-1);
       if (j === undefined || k === undefined) {
         throw new Error(
-          "This definitely shouldn't happen. Open an issue at https://github.com/retraigo/fortuna",
+          "This definitely shouldn't happen. Open an issue at https://github.com/retraigo/fortuna"
         ); // this will hopefully never happen
       }
       this.#alias[j] = k;
@@ -80,9 +81,13 @@ export class GachaMachine<T> {
     return res;
   }
   #roll(): number {
-    const inter = Math.random() * this.#items.length
-    const i = ~~inter
-    const y = inter - i
-    return y < this.#weights[i] ? i : this.#alias[i];
+    const inter = Math.random() * this.#items.length;
+    const i = ~~inter;
+    const y = inter - i;
+    return y < this.#weights[i]
+      ? i
+      : this.#alias[i] !== -1
+      ? this.#alias[i]
+      : i;
   }
 }
