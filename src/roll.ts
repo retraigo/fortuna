@@ -1,4 +1,4 @@
-export interface GachaChoice<ItemType> {
+export type GachaChoice<ItemType> = {
   result: ItemType;
   chance: number;
 }
@@ -29,26 +29,27 @@ export interface GachaChoice<ItemType> {
  * ]
  * roll(items, 19) // Rolls one item from the list of items, faster because the total chance is known.
  * ```
+ * @module
  */
 export function roll<ItemType>(
   choices: ItemType[],
   chances: number[],
-  totalChance?: number,
+  totalChance?: number
 ): ItemType;
 export function roll<ItemType>(
   choices: GachaChoice<ItemType>[],
-  totalChance?: number,
+  totalChance?: number
 ): ItemType;
 export function roll<ItemType>(
   choices: ItemType[] | GachaChoice<ItemType>[],
   chanceArrOrTotalChance: number | number[] = 0,
-  totalChance = 0,
+  totalChance = 0
 ): ItemType {
   const asArray = Array.isArray(chanceArrOrTotalChance);
   let total = asArray ? totalChance : chanceArrOrTotalChance || 0;
   if (typeof total !== "number") {
     throw new TypeError(
-      `Invalid type for total chance. Expected 'undefined' or 'number', got '${typeof total}'`,
+      `Invalid type for total chance. Expected 'undefined' or 'number', got '${typeof total}'`
     );
   }
   let i = 0;
@@ -69,14 +70,16 @@ export function roll<ItemType>(
       : (choices[i] as GachaChoice<ItemType>).chance;
     if (result < going) {
       return asArray
-        ? choices[i] as ItemType
+        ? (choices[i] as ItemType)
         : (choices[i] as GachaChoice<ItemType>).result;
     }
     i += 1;
   }
   return asArray
-    ? choices[Math.floor(Math.random() * choices.length)] as ItemType
-    : (choices[Math.floor(Math.random() * choices.length)] as GachaChoice<
-      ItemType
-    >).result;
+    ? (choices[Math.floor(Math.random() * choices.length)] as ItemType)
+    : (
+        choices[
+          Math.floor(Math.random() * choices.length)
+        ] as GachaChoice<ItemType>
+      ).result;
 }
