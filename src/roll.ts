@@ -1,3 +1,30 @@
+/**
+ * Roll one item from a pool using linear search. Simple and great for one-time use pools. 
+ * Use `GachaMachine` if you will be picking multiple items from the same pool.
+ * ```ts
+ * const items = [
+ *   { result: "SSR cool character", chance: 1 },
+ *   { result: "Kinda rare character", chance: 3 },
+ *   { result: "Mob character", chance: 5 },
+ *   { result: "Mob character", chance: 5 },
+ *   { result: "Mob character", chance: 5 },
+ * ]
+ * roll(items) // Rolls one item from the list of items
+ * ```
+ *
+ * ```ts
+ * const items = [
+ *   { result: "SSR cool character", chance: 1 },
+ *   { result: "Kinda rare character", chance: 3 },
+ *   { result: "Mob character", chance: 5 },
+ *   { result: "Mob character", chance: 5 },
+ *   { result: "Mob character", chance: 5 },
+ * ]
+ * roll(items, 19) // Rolls one item from the list of items, faster because the total chance is known.
+ * ```
+ * @module
+ */
+
 /** One item from a gacha pool */
 export type GachaChoice<ItemType> = {
   result: ItemType;
@@ -30,7 +57,6 @@ export type GachaChoice<ItemType> = {
  * ]
  * roll(items, 19) // Rolls one item from the list of items, faster because the total chance is known.
  * ```
- * @module
  */
 export function roll<ItemType>(
   choices: ItemType[],
