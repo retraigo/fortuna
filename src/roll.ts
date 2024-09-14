@@ -1,10 +1,11 @@
+/** One item from a gacha pool */
 export type GachaChoice<ItemType> = {
   result: ItemType;
   chance: number;
 }
 
 /**
- * Roll one item from a pool using linear search. Simple and great for one-time use pools.
+ * Roll one item from a pool using linear search. Simple and great for one-time use pools. 
  * Use `GachaMachine` if you will be picking multiple items from the same pool.
  * @param items List of items to roll from, each having a `result` and `chance`.
  * @param totalChance Total weight of the pool.

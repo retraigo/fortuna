@@ -5,7 +5,7 @@
  * The `result` property holds the result that will be returned after rolling.
  * `chance` is the weight of the result.
  */
-export interface GachaChoice<T> {
+export type GachaChoice<T> = {
   result: T;
   chance: number;
 }
@@ -24,6 +24,7 @@ export class GachaMachine<T> {
     this.#totalChance = 0;
     this.#configItems(items);
   }
+  /** Update items in the pool. */
   set items(items: GachaChoice<T>[]) {
     this.#items = new Array(items.length);
     this.#configItems(items);
@@ -69,7 +70,7 @@ export class GachaMachine<T> {
    * ```
    *
    * If you are looking for the `distinct` rolls,
-   * try importing GachaMachine3 instead of GachaMachine.
+   * try importing LimitedGachaMachine instead of GachaMachine.
    */
   get(count: number): T[] {
     let i = 0;
