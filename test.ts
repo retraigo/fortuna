@@ -185,10 +185,10 @@ Deno.test({
 });
 
 Deno.test({
-  name: `Toss an unbiased coin (should return ["H"] or ["T"])`,
+  name: `Toss an unbiased coin (should return ["0"] or ["1"])`,
   fn() {
     const res = unbiasedCoin();
-    assert(res.length === 1 && res[0] === "H" || res[0] === "T");
+    assert(res.length === 1 && res[0] === "0" || res[0] === "1");
   },
 });
 
@@ -196,7 +196,7 @@ Deno.test({
   name: `Toss N unbiased coins (should return an array of "H" or "T")`,
   fn() {
     const res = unbiasedCoin();
-    assert(res.length === 1 && res.every((x) => x === "H" || x === "T"));
+    assert(res.length === 1 && res.every((x) => x === "0" || x === "1"));
   },
 });
 

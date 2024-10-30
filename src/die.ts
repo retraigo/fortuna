@@ -1,6 +1,10 @@
-export interface DieConfig {
+/** Config to define a die */
+type DieConfig = {
+  /** Number of times the die rolls */
   times: number;
+  /** Number of faces the die has */
   face: number;
+  /** A + or - modifier to the roll */
   modifier: number;
 }
 
@@ -25,11 +29,10 @@ function parseExpression(exp: string): DieConfig {
   }
 }
 
-export interface RollOptions {
-  times?: number;
-  face?: number;
+/** Config to roll a die */
+export type RollOptions = Partial<DieConfig> & {
+  /** Whether to consider each roll separately or add them */
   separate?: boolean;
-  modifier?: number;
 }
 const defaultRollOptions: RollOptions = {
   times: 1,
@@ -44,13 +47,23 @@ const defaultRollOptions: RollOptions = {
  * @param exp Die expression
  * @param separate whether to consider each roll individually
  */
-export function rollDie(exp: string, separate?: boolean): number | number[];
+export function rollDie(exp: string, separate: true): number[];
+/**
+ * Roll an unbiased die. 
+ * A biased die can be implemented using GachaMachine.
+ * @param exp Die expression
+ * @param separate whether to consider each roll individually
+ */
+export function rollDie(exp: string, separate?: false): number;
 /**
  * Roll an unbiased die.
  * A biased die can be implemented using GachaMachine.
  * @param options Options for rolling the die.
  */
 export function rollDie(options: RollOptions): number | number[];
+/**
+ * Roll a simple unbiased 6-faced die.
+ */
 export function rollDie(): number;
 /**
  * Roll an unbiased die.
