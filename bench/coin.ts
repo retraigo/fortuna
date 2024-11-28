@@ -15,7 +15,7 @@ Deno.bench({
     fn() {
         const res = [];
         for (let i = 0; i < nTrials; i += 1) {
-            res.push(Math.random() < 0.5 ? "0" : "1")
+            res.push(Math.random() < 0.5 ? "H" : "T")
         }
     }
 })
