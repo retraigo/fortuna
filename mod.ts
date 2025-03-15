@@ -1,7 +1,7 @@
 /**
  * The quick solution for everything random!
  * A Gacha-like system to roll random items with weights.
- * 
+ *
  * More weight = more common. Think of it as in terms of probability.
  *
  * ```js
@@ -50,3 +50,4 @@ export { LimitedGachaMachine } from "./src/limited_machine.ts";
 export { rollDie } from "./src/die.ts";
 export { roll } from "./src/roll.ts";
 export { unbiasedCoin } from "./src/coin.ts";
+export { rollWithPattern } from "./src/pattern.ts";
