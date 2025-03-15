@@ -25,5 +25,3 @@ export function unbiasedCoin(n = 1): ("0" | "1")[] {
     return res;
   }
 }
-
-console.log(unbiasedCoin(200).join(""))
