@@ -45,4 +45,9 @@
  * @module
  */
 
-export * from "./src/mod.ts"
+export { GachaMachine } from "./machine.ts";
+export { LimitedGachaMachine } from "./limited_machine.ts";
+export { rollDie } from "./die.ts";
+export { roll } from "./roll.ts";
+export { unbiasedCoin } from "./coin.ts";
+export { rollWithPattern } from "./pattern.ts";

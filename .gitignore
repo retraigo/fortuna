@@ -3,3 +3,6 @@ map.js
 test_ig.ts
 test_old.ts
 t.ts
+node_modules
+dist
+pnpm-lock.yaml

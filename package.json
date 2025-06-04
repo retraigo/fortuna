@@ -1,0 +1,36 @@
+{
+  "name": "@retraigo/fortuna",
+  "version": "4.1.4",
+  "type": "module",
+  "description": "A Gacha-like system to roll random items with weights.",
+  "exports": {
+    ".": "./dist/mod.js"
+  },
+  "scripts": {
+    "test": "node test",
+    "build": "tsc"
+  },
+  "typings": "./types.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/retraigo/fortuna.git"
+  },
+  "keywords": [
+    "gacha",
+    "random",
+    "rwc",
+    "choice",
+    "loot",
+    "random-weights"
+  ],
+  "author": "retraigo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/retraigo/fortuna/issues"
+  },
+  "homepage": "https://github.com/retraigo/fortuna#readme",
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "typescript": "^5.7"
+  }
+}
