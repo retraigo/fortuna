@@ -8,11 +8,11 @@
  * // deno.land
  * import { GachaMachine } from "https://deno.land/x/fortuna/mod.ts"
  * // JSR
- * import { GachaMachine } from "jsr:@nekooftheabyss/fortuna@4.1.3"
+ * import { GachaMachine } from "jsr:@nekooftheabyss/fortuna@4.2.0"
  * // Node
  * import { GachaMachine } from "@nekooftheabyss/fortuna"
  * // esm.sh
- * import { GachaMachine } from "https://esm.sh/jsr/@nekooftheabyss/fortuna@4.1.3"
+ * import { GachaMachine } from "https://esm.sh/jsr/@nekooftheabyss/fortuna@4.2.0"
  *
  * const items = [
  *    { result: "SSR cool character", chance: 1 },

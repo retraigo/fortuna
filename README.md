@@ -11,11 +11,11 @@ More weight = more common. Think of it as in terms of probability.
 // Deno
 import { GachaMachine } from "https://deno.land/x/fortuna/mod.ts"
 // JSR
-import { GachaMachine } from "jsr:@nekooftheabyss/fortuna@4.1.3"
+import { GachaMachine } from "jsr:@nekooftheabyss/fortuna@4.2.0"
 // Node
 import { GachaMachine } from "@nekooftheabyss/fortuna"
 // esm.sh
-import { GachaMachine } from "https://esm.sh/jsr/@nekooftheabyss/fortuna@4.1.3"
+import { GachaMachine } from "https://esm.sh/jsr/@nekooftheabyss/fortuna@4.2.0"
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -57,7 +57,7 @@ doesn't affect the pool of items used when initializing `new LimitedGachaMachine
 
 import { LimitedGachaMachine } from "https://deno.land/x/fortuna/mod.ts"
 // JSR
-import { LimitedGachaMachine } from "jsr:@nekooftheabyss/fortuna@4.1.3"
+import { LimitedGachaMachine } from "jsr:@nekooftheabyss/fortuna@4.2.0"
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -88,7 +88,7 @@ You probably don't need all complicated stuff. Here's a quick way to just create
 (Only works on v3.0.1 and above)
 
 ```ts
-import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.3/roll"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.2.0/roll"; // wherever you are importing from.
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -104,7 +104,7 @@ roll(items); // Rolls one item from the list of items using linear search.
 You can also provide two individual arrays for choices and weights.
 
 ```ts
-import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.3/roll"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.2.0/roll"; // wherever you are importing from.
 
 const items = [
     "SSR cool character",
@@ -121,7 +121,7 @@ roll(items, chances); // Rolls one item from the list of items using linear sear
 Providing the total chance may result in faster rolls.
 
 ```ts
-import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.3/roll"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.2.0/roll"; // wherever you are importing from.
 
 const items = [
     { result: "SSR cool character", chance: 1 },
@@ -135,7 +135,7 @@ roll(items, 19); // Rolls one item from the list of items using linear search.
 ```
 
 ```ts
-import { roll } from "jsr:@nekooftheabyss/fortuna@4.1.3/roll"; // wherever you are importing from.
+import { roll } from "jsr:@nekooftheabyss/fortuna@4.2.0/roll"; // wherever you are importing from.
 
 const items = [
     "SSR cool character",
