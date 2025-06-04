@@ -1,0 +1,6 @@
+.vscode
+.pnpm-debug.log
+tests
+deno.json
+deno.lock
+.github
