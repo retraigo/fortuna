@@ -1,5 +1,5 @@
 {
-  "name": "@retraigo/fortuna",
+  "name": "@nekooftheabyss/fortuna",
   "version": "4.1.4",
   "type": "module",
   "description": "A Gacha-like system to roll random items with weights.",
